@@ -4,7 +4,7 @@ import game.Control;
 import game.Game;
 import game.Player;
 import game.TypeCharacter;
-import table.Position;
+import board.Position;
 import game.Character;
 
 public class Tests {

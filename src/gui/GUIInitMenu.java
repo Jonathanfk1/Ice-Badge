@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import game.Control;
@@ -22,7 +23,6 @@ public class GUIInitMenu extends JFrame {
 	protected Control control_;
 
 	public GUIInitMenu(Control control) {
-
 		this.control_ = control;
 		this.panel_ = new JPanel();
 
@@ -37,7 +37,30 @@ public class GUIInitMenu extends JFrame {
 		this.setVisible(true);
 		this.setSize(new Dimension(300, 450));
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
+	}
+	
+	private String getConnectionIp() {
+		String ip = (String)JOptionPane.showInputDialog(
+                this,
+                "Enter the IP address",
+                "Enter info",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                "localhost");
+		return ip;
+	}
+	
+	private String getConnectionName() {
+		String name = (String)JOptionPane.showInputDialog(
+                this,
+                "Enter the name your name",
+                "Enter info",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                "");
+		return name;
 	}
 
 	public void setButtons() {
@@ -52,9 +75,8 @@ public class GUIInitMenu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand() == "CONNECT") {
-					control_.connect();
+					control_.connect(getConnectionIp(), getConnectionName());
 				}
-
 			}
 		});
 		this.panel_.add(connect, gbc);
@@ -70,7 +92,7 @@ public class GUIInitMenu extends JFrame {
 				if (e.getActionCommand() == "START GAME") {
 					
 					// control_.startGame();
-
+					new GUIBoard(control_);
 					control_.receiveBeginMessage(1);
 				}
 

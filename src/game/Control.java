@@ -2,13 +2,13 @@ package game;
 
 import gui.GUIInitMenu;
 import gui.GUISelectCharacter;
-import gui.GUITable;
+import gui.GUIBoard;
 import netgames.ActorNetGames;
-import table.Position;
+import board.Position;
 
 public class Control {
 
-	protected static final int NUMBER_OF_PLAYERS = 6;
+	protected static final int NUMBER_OF_CHARACTERS = 6;
 
 	protected boolean connected_;
 	protected ActorNetGames netgames_;
@@ -20,13 +20,13 @@ public class Control {
 	public void run() {
 		this.player_ = new Player();
 		this.netgames_ = new ActorNetGames(this);
-		this.characterLeft_ = this.NUMBER_OF_PLAYERS;
+		this.characterLeft_ = this.NUMBER_OF_CHARACTERS;
 		new GUIInitMenu(this);
 	}
 
 	// NOT IMPLEMENTED CORRECTLY
-	public void connect() {
-		this.netgames_.connect(null, null);
+	public void connect(String ip, String name) {
+		this.netgames_.connect(ip, name);
 	}
 
 	public void disconnect() {
@@ -39,7 +39,7 @@ public class Control {
 
 	public void receiveBeginMessage(int i) {
 		this.game_ = new Game(32, 32);
-		this.game_.setPlayersOnTable(i, this.player_);
+		this.game_.setPlayersOnBoard(i, this.player_);
 		new GUISelectCharacter(this);
 
 		if (i == 1) {
@@ -86,7 +86,7 @@ public class Control {
 		}
 
 		if (this.characterLeft_ == 0) {
-			new GUITable(this);
+			new GUIBoard(this);
 			System.out.println(this.player_.isTurn());
 		}
 	}
@@ -101,4 +101,5 @@ public class Control {
 	public Player getPlayer() {
 		return this.player_;
 	}
+
 }

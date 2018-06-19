@@ -1,6 +1,6 @@
 package game;
 
-import table.Position;
+import board.Position;
 
 public class Action {
 	protected Position playerPosition;

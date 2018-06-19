@@ -3,7 +3,7 @@ package game;
 import java.util.ArrayList;
 import java.util.List;
 
-import table.Position;
+import board.Position;
 
 public class Player {
 
