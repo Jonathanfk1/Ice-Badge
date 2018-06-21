@@ -4,6 +4,7 @@ import game.Control;
 import game.Player;
 
 public class ActorPlayer extends Player {
+    int id;
     Control control;
 
     public ActorPlayer(Control control) {
@@ -12,6 +13,15 @@ public class ActorPlayer extends Player {
     }
 
     public void askToConnect() {
-        control.connectToNetGames();
+        this.control.connectToNetGames();
     }
+
+    public void askNetGamesToStartGameOnline() {
+        this.control.delegateStartGameOnlineToNetGames();
+    }
+
+	public void createGame(boolean startsPlaying) {
+        
+	}
+
 }

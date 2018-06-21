@@ -95,7 +95,7 @@ public class GUIMainMenu extends JFrame {
 					
 					new GUIBoard(control_);
 					
-					control_.receiveBeginMessage(1);
+					control_.delegateCreateNewGameToActorPlayer(1);
 				}
 
 			}

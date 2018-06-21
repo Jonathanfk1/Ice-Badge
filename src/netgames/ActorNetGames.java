@@ -17,8 +17,10 @@ import gui.GUIMainMenu;
 
 public class ActorNetGames implements OuvidorProxy {
 
+	protected int id;
 	protected Proxy proxy_;
 	protected Control control_;
+	public boolean isMyTurn = false;
 
 	public ActorNetGames(Control control) {
 		super();
@@ -28,7 +30,16 @@ public class ActorNetGames implements OuvidorProxy {
 
 	@Override
 	public void iniciarNovaPartida(Integer posicao) {
-		this.control_.receiveBeginMessage(posicao);
+		this.control_.delegateCreateNewGameToActorPlayer(posicao);
+	}
+
+	public void startGameOnline() {
+		try {
+			this.proxy_.iniciarPartida(2);
+		} catch (NaoConectadoException e) {
+			new JOptionPane().setMessage("You're disconnected.");
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -67,15 +78,6 @@ public class ActorNetGames implements OuvidorProxy {
 			proxy_.enviaJogada(launchAction);
 		} catch (NaoJogandoException e) {
 			new JOptionPane().setMessage("Not playing.");
-			e.printStackTrace();
-		}
-	}
-
-	public void startGame() {
-		try {
-			this.proxy_.iniciarPartida(2);
-		} catch (NaoConectadoException e) {
-			new JOptionPane().setMessage("You're disconnected.");
 			e.printStackTrace();
 		}
 	}

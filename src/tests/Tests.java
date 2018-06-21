@@ -16,7 +16,7 @@ public class Tests {
 
 	public Tests(Control control) {
 		this.control_ = control;
-		this.control_.receiveBeginMessage(1);
+		this.control_.delegateCreateNewGameToActorPlayer(1);
 		this.game_ = this.control_.getGame();
 		
 		

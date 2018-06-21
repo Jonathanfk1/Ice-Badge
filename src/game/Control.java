@@ -42,17 +42,30 @@ public class Control {
 	public void disconnect() {
 		this.actorNetGames.disconnect();
 	}
+	
+	public void delegateCreateNewGameToActorPlayer(Integer posicao) {
+		if (posicao == 1) {
+			actorNetGames.isMyTurn = true;
+		} else {
+			actorNetGames.isMyTurn = false;
+		}
 
-	public void startGame() {
-		this.actorNetGames.startGame();
+		actorPlayer.createGame(actorNetGames.isMyTurn);
 	}
 
-	public void receiveBeginMessage(int playerId) {
+
+
+	public void delegateStartGameOnlineToNetGames() {
+		actorNetGames.startGameOnline();
+	}
+
+
+	public void setGameStart(int playerIdTurn) {
 		this.game = new Game(32, 32);
-		this.game.setPlayersOnBoard(playerId, this.actorPlayer);
+		this.game.setPlayersOnBoard(playerIdTurn, this.actorPlayer);
 		this.currentMenu = new GUISelectCharacter(this);
 
-		if (playerId == 1) {
+		if (playerIdTurn == 1) {
 			this.actorPlayer.setTurn(true);
 		}
 	}
@@ -121,6 +134,10 @@ public class Control {
 
 	public void connectToNetGames() {
 		this.actorNetGames.connect(mainMenu.getConnectionIp(), mainMenu.getConnectionName());
+	}
+
+	public ActorNetGames getActorNetGames() {
+		return actorNetGames;
 	}
 
 }
