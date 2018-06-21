@@ -1,56 +1,65 @@
 package game;
 
-import gui.GUIInitMenu;
+import gui.GUIMainMenu;
 import gui.GUISelectCharacter;
 import gui.GUIBoard;
 import netgames.ActorNetGames;
+
+import javax.swing.JFrame;
+
+import actors.ActorPlayer;
 import board.Position;
 
 public class Control {
 
 	protected static final int NUMBER_OF_CHARACTERS = 6;
 
-	protected boolean connected_;
-	protected ActorNetGames netgames_;
-	protected Game game_;
-	protected Player player_;
-	protected boolean firstPlayer_;
-	protected int characterLeft_;
+	protected ActorNetGames actorNetGames;
+	protected ActorPlayer actorPlayer;
+	protected Game game;
+	protected boolean connected;
+	protected boolean isFirstPlayer;
+	protected int charactersLeft;
+	protected GUIMainMenu mainMenu;
+	protected JFrame currentMenu;
 
-	public void run() {
-		this.player_ = new Player();
-		this.netgames_ = new ActorNetGames(this);
-		this.characterLeft_ = this.NUMBER_OF_CHARACTERS;
-		new GUIInitMenu(this);
+	public Control() {
+		this.actorPlayer = new ActorPlayer(this);
+		this.actorNetGames = new ActorNetGames(this);
+		this.charactersLeft = this.NUMBER_OF_CHARACTERS;
+	}
+
+	public void runInitialMenu() {
+		this.mainMenu = new GUIMainMenu(this);
+		currentMenu = mainMenu;
 	}
 
 	// NOT IMPLEMENTED CORRECTLY
 	public void connect(String ip, String name) {
-		this.netgames_.connect(ip, name);
+		this.actorNetGames.connect(ip, name);
 	}
 
 	public void disconnect() {
-		this.netgames_.disconnect();
+		this.actorNetGames.disconnect();
 	}
 
 	public void startGame() {
-		this.netgames_.startGame();
+		this.actorNetGames.startGame();
 	}
 
-	public void receiveBeginMessage(int i) {
-		this.game_ = new Game(32, 32);
-		this.game_.setPlayersOnBoard(i, this.player_);
-		new GUISelectCharacter(this);
+	public void receiveBeginMessage(int playerId) {
+		this.game = new Game(32, 32);
+		this.game.setPlayersOnBoard(playerId, this.actorPlayer);
+		this.currentMenu = new GUISelectCharacter(this);
 
-		if (i == 1) {
-			this.player_.setTurn(true);
+		if (playerId == 1) {
+			this.actorPlayer.setTurn(true);
 		}
-
 	}
 
 	public Action changeTurn() {
-		if (this.player_.isTurn()) {
-			return this.game_.changeTurn();
+		if (this.actorPlayer.isTurn()) {
+			return this.game.changeTurn();
 		}
 		return new Action(null, null, TypeAction.CHANGE_TURN);
 	}
@@ -59,20 +68,20 @@ public class Control {
 		Position clickedPosition = null;
 		Character character;
 
-		if (this.player_.isTurn()) {
-			clickedPosition = this.game_.getPosition(x, y);
+		if (this.actorPlayer.isTurn()) {
+			clickedPosition = this.game.getPosition(x, y);
 			character = clickedPosition.getCharacter();
 
 			if (clickedPosition.getCharacter() != null) {
 
-				if (this.player_.checkPlayerCharacter(character)) {
-					return this.game_.selectPosition(clickedPosition);
+				if (this.actorPlayer.checkPlayerCharacter(character)) {
+					return this.game.selectPosition(clickedPosition);
 				}
 
-				return this.game_.attack(clickedPosition);
+				return this.game.attack(clickedPosition);
 			}
 
-			return this.game_.move(clickedPosition);
+			return this.game.move(clickedPosition);
 		}
 		return null;
 	}
@@ -80,14 +89,14 @@ public class Control {
 	public void selectCharacter(TypeCharacter type) {
 
 		// SELECT CHARACTER LOOP
-		if (this.characterLeft_ > 0) {
-			this.game_.selectCharacter(this.player_, type);
-			this.characterLeft_--;
+		if (this.charactersLeft > 0) {
+			this.game.selectCharacter(this.actorPlayer, type);
+			this.charactersLeft--;
 		}
 
-		if (this.characterLeft_ == 0) {
+		if (this.charactersLeft == 0) {
 			new GUIBoard(this);
-			System.out.println(this.player_.isTurn());
+			System.out.println(this.actorPlayer.isTurn());
 		}
 	}
 
@@ -95,11 +104,23 @@ public class Control {
 	// TESTS
 
 	public Game getGame() {
-		return this.game_;
+		return this.game;
 	}
 
-	public Player getPlayer() {
-		return this.player_;
+	public ActorPlayer getActorPlayer() {
+		return this.actorPlayer;
+	}
+
+	public void receiveLaunchedAction(Action launchAction) {
+
+	}
+
+	public void setActorPlayer(ActorPlayer actorPlayer) {
+		this.actorPlayer = actorPlayer; 
+	}
+
+	public void connectToNetGames() {
+		this.actorNetGames.connect(mainMenu.getConnectionIp(), mainMenu.getConnectionName());
 	}
 
 }

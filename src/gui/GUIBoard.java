@@ -1,6 +1,8 @@
 package gui;
 
 import game.Control;
+import board.Position;
+import board.Board;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -17,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
+import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -24,7 +27,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
+ 
 public class GUIBoard extends JFrame {
 
 	private Control control;
@@ -36,7 +39,6 @@ public class GUIBoard extends JFrame {
 
 		this.setFrame();
 		this.setButtons();
-		this.setBoard();
 	}
 
 	private void setFrame() {
@@ -50,7 +52,7 @@ public class GUIBoard extends JFrame {
 	}
 
 
-	private void setBoard() {
+	public Board setBoard(List<Position> positions) {
 		ImageIcon icon = new ImageIcon("resources/grassTile.png");
 		icon.setImage(icon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
 
@@ -72,26 +74,6 @@ public class GUIBoard extends JFrame {
 		firstTile.setBounds(0, 0, 15, 15);
 		firstTile.setVisible(true);
 
-				ImageIcon icon = new ImageIcon("resources/grassTile.png");
-		icon.setImage(icon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
-
-		JButton firstTile = new JButton();
-		firstTile.setPreferredSize(new Dimension(15, 15));
-		firstTile.setIcon(icon);
-		firstTile.setContentAreaFilled(false);
-		firstTile.setLayout(null);
-		firstTile.setActionCommand("grass");
-		firstTile.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (e.getActionCommand() == "grass") {
-					System.out.println("clicked grass");
-				}
-			}
-		});
-		this.panel.add(firstTile);
-		firstTile.setBounds(0, 0, 15, 15);
-		firstTile.setVisible(true);
 
 		JButton secondTile = new JButton();
 		secondTile.setPreferredSize(new Dimension(15, 15));
@@ -110,6 +92,9 @@ public class GUIBoard extends JFrame {
 		this.panel.add(secondTile);
 		secondTile.setBounds(0, 0, 15, 15);
 		secondTile.setVisible(true);
+
+		Board board = new Board(50, 50);
+		return board;
 	}
 
 

@@ -2,15 +2,18 @@ package netgames;
 
 import javax.swing.JOptionPane;
 
+import actors.ActorPlayer;
 import br.ufsc.inf.leobr.cliente.Jogada;
 import br.ufsc.inf.leobr.cliente.OuvidorProxy;
 import br.ufsc.inf.leobr.cliente.Proxy;
 import br.ufsc.inf.leobr.cliente.exception.ArquivoMultiplayerException;
 import br.ufsc.inf.leobr.cliente.exception.JahConectadoException;
 import br.ufsc.inf.leobr.cliente.exception.NaoConectadoException;
+import br.ufsc.inf.leobr.cliente.exception.NaoJogandoException;
 import br.ufsc.inf.leobr.cliente.exception.NaoPossivelConectarException;
+import game.Action;
 import game.Control;
-import gui.GUIInitMenu;
+import gui.GUIMainMenu;
 
 public class ActorNetGames implements OuvidorProxy {
 
@@ -18,6 +21,9 @@ public class ActorNetGames implements OuvidorProxy {
 	protected Control control_;
 
 	public ActorNetGames(Control control) {
+		super();
+		proxy_ = Proxy.getInstance();
+		proxy_.addOuvinte(this);
 	}
 
 	@Override
@@ -39,8 +45,8 @@ public class ActorNetGames implements OuvidorProxy {
 
 	@Override
 	public void receberJogada(Jogada jogada) {
-		// TODO Auto-generated method stub
-
+		LaunchAction launchAction = (LaunchAction) jogada;
+		this.control_.receiveLaunchedAction(launchAction.getLaunchAction());
 	}
 
 	@Override
@@ -53,6 +59,16 @@ public class ActorNetGames implements OuvidorProxy {
 	public void tratarPartidaNaoIniciada(String message) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void sendAction(Action action) {
+		LaunchAction launchAction = new LaunchAction(action);
+		try {
+			proxy_.enviaJogada(launchAction);
+		} catch (NaoJogandoException e) {
+			new JOptionPane().setMessage("Not playing.");
+			e.printStackTrace();
+		}
 	}
 
 	public void startGame() {

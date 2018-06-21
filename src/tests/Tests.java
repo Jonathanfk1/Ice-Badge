@@ -33,7 +33,7 @@ public class Tests {
 	}
 
 	private void testCreatePlayers() {
-		this.player_ = this.control_.getPlayer();
+		this.player_ = this.control_.getActorPlayer();
 		this.player_.setName("Player 1");
 		this.opponent_= this.game_.getOpponent();
 		this.opponent_.setName("Player 2");

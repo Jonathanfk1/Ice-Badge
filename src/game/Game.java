@@ -1,6 +1,7 @@
 package game;
 
 import board.Position;
+import actors.ActorPlayer;
 import board.Board;
 
 public class Game {
@@ -11,26 +12,30 @@ public class Game {
 
 	public Game(int width, int height) {
 		this.board = new Board(height, width);
-		this.opponent = new Player();
+		// this.opponent = new Player();
 	}
 
 	public Position getPosition(int x, int y) {
 		return this.board.getPosition(x, y);
 	}
 
-	public void setPlayersOnBoard(int i, Player player) {
-		this.board.createBoard(2);
+	public boolean setPlayersOnBoard(int turn, Player player) {
 		Position mainBases[] = this.board.getMainBases();
 
 		this.player = player;
 
-		if (i == 1) {
+		if (turn == 1) {
 			this.player.setTurn(true);
 			this.player.addBase(mainBases[0]);
 			this.opponent.addBase(mainBases[1]);
-		} else {
+			return true;
+		} else if (turn == 2) {
 			this.player.addBase(mainBases[1]);
 			this.opponent.addBase(mainBases[0]);
+			return true;
+		} else {
+			System.out.println("'turn' flag invalid.");
+			return false;
 		}
 	}
 
@@ -66,13 +71,12 @@ public class Game {
 		return new Action(null, null, TypeAction.CHANGE_TURN);
 	}
 
-	public void selectCharacter(Player player, TypeCharacter type) {
+	public void selectCharacter(ActorPlayer actorPlayer, TypeCharacter type) {
 		Character character;
 
 		switch (type) {
 
 		case SWORDSMAN:
-
 			character = new Character(100, 50, 3, 4, TypeCharacter.SWORDSMAN);
 			player.addCharacter(character);
 			this.board.setCharacterOnBoard(player, character);
@@ -85,14 +89,12 @@ public class Game {
 			break;
 
 		case BARD:
-
 			character = new Character(100, 30, 5, 5, TypeCharacter.BARD);
 			player.addCharacter(character);
 			this.board.setCharacterOnBoard(player, character);
 			break;
 
 		case CLERIG:
-
 			character = new Character(100, 25, 2, 8, TypeCharacter.CLERIG);
 			player.addCharacter(character);
 			this.board.setCharacterOnBoard(player, character);

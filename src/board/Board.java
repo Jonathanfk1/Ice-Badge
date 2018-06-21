@@ -5,29 +5,41 @@ import game.Player;
 
 public class Board {
 
+	protected static final int DEFAULT_NUMBER_OF_PLAYERS = 2;
+
 	protected Position[][] positions;
 	protected Position mainBases[];
 	protected int rowSize;
 	protected int columnSize;
 
+	public Board(int rowSize, int columnSize, int numberOfPlayers) {
+		this.rowSize = rowSize;
+		this.columnSize = columnSize;
+		this.positions = new Position[rowSize][columnSize];
+		this.generateBoard();
+		this.setMainBases(numberOfPlayers);
+	}
+
+
 	public Board(int rowSize, int columnSize) {
 		this.rowSize = rowSize;
 		this.columnSize = columnSize;
 		this.positions = new Position[rowSize][columnSize];
+		this.generateBoard();
+		this.setMainBases(DEFAULT_NUMBER_OF_PLAYERS);
 	}
 
-	public void createBoard(int numberOfPlayers) {
+	public void generateBoard() {
 		for (int i = 0; i < rowSize; i++) {
 			for (int j = 0; j < columnSize; j++) {
 				this.positions[i][j] = new Position(i, j, TypeTile.GRASS);
-				System.out.println(this.positions[i][j].getTile());
+				System.out.println(this.positions[i][j].getTile() + " " + i + " " + j);
 			}
 		}
-		this.mainBases = new Position[numberOfPlayers];
-		this.setMainBases();
 	}
 
-	private void setMainBases() {
+	private void setMainBases(int numberOfPlayers) {
+		this.mainBases = new Position[numberOfPlayers];
 		Position mainBase1 = this.getPosition(0, 15);
 		mainBase1.setTile(TypeTile.MAIN_BASE_1);
 		this.mainBases[0] = mainBase1;
@@ -40,8 +52,15 @@ public class Board {
 	public Position getPosition(int x, int y) {
 		if (x <= rowSize && y <= columnSize) {
 			return this.positions[x][y];
+		} else if (x >= rowSize) {
+			System.out.println("Row position out of bounds.");
+			return null;
+		} else if (y >= columnSize) {
+			System.out.println("Column position out of bounds.");
+			return null;
+		} else {
+			return null;
 		}
-		return null;
 	}
 
 	public Position[] getMainBases() {
