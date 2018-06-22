@@ -1,5 +1,7 @@
 package actors;
 
+import java.awt.event.ActionEvent;
+
 import game.Control;
 import game.Player;
 
@@ -20,8 +22,9 @@ public class ActorPlayer extends Player {
         this.control.delegateStartGameOnlineToNetGames();
     }
 
-	public void createGame(boolean startsPlaying) {
-        
-	}
+	public void startPlayOverNet(boolean iStartPlaying) {
+        String nameOfOtherPlayer = control.getOpponentName();
+        this.control.createGame(iStartPlaying); 
+    }
 
 }

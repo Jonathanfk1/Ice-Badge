@@ -54,7 +54,7 @@ public class GUIMainMenu extends JFrame {
 	public String getConnectionName() {
 		String name = (String)JOptionPane.showInputDialog(
                 this,
-                "Enter the name your name",
+                "Enter your name",
                 "Enter info",
                 JOptionPane.PLAIN_MESSAGE,
                 null,
@@ -75,7 +75,20 @@ public class GUIMainMenu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand() == "CONNECT") {
-					control_.getActorPlayer().askToConnect();
+					control_.connectToNetGames();
+				}
+			}
+		});
+		this.panel_.add(connect, gbc);
+
+		// ################## DISCONNECT ##################
+		JButton disconnect = new JButton("DISCONNECT");
+		gbc.gridy++;
+		disconnect.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getActionCommand() == "DISCONNECT") {
+					control_.disconnect();;
 				}
 			}
 		});
@@ -93,9 +106,11 @@ public class GUIMainMenu extends JFrame {
 					
 					// control_.startGame();
 					
-					new GUIBoard(control_);
+					control_.sendStart();
+
+					// new GUIBoard(control_);
 					
-					control_.delegateCreateNewGameToActorPlayer(1);
+					// control_.delegateCreateNewGameToActorPlayer(1);
 				}
 
 			}

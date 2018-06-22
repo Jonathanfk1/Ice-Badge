@@ -30,7 +30,12 @@ public class ActorNetGames implements OuvidorProxy {
 
 	@Override
 	public void iniciarNovaPartida(Integer posicao) {
-		this.control_.delegateCreateNewGameToActorPlayer(posicao);
+		if (posicao == 1) {
+			this.isMyTurn = true;
+		} else {
+			this.isMyTurn = false;
+		}
+		control_.startPlayOverNet(this.isMyTurn);
 	}
 
 	public void startGameOnline() {
@@ -72,6 +77,18 @@ public class ActorNetGames implements OuvidorProxy {
 
 	}
 
+	public String getOpponentName() {
+		String name = "";
+
+		if(isMyTurn) { 
+			name = proxy_.obterNomeAdversario(2);
+		} else {
+			name = proxy_.obterNomeAdversario(1);
+		}
+
+		return name;
+	}
+
 	public void sendAction(Action action) {
 		LaunchAction launchAction = new LaunchAction(action);
 		try {
@@ -82,12 +99,14 @@ public class ActorNetGames implements OuvidorProxy {
 		}
 	}
 
-	public void connect(String ip, String name) {
+	public boolean connect(String ip, String name) {
+		boolean connectionSuccess = false;
 		try {
 			if(this.proxy_ == null) {
 				new JOptionPane().showMessageDialog(null, "Proxy is null.", "Proxy error", JOptionPane.ERROR_MESSAGE);
 			} else {
 				this.proxy_.conectar(ip, name);
+				return connectionSuccess = true;
 			}
 		} catch (JahConectadoException e) {
 			new JOptionPane().setMessage("You're already connected.");
@@ -99,6 +118,7 @@ public class ActorNetGames implements OuvidorProxy {
 			new JOptionPane().setMessage("Multiplayer Property files error.");
 			e.printStackTrace();
 		}
+		return connectionSuccess;
 	}
 
 	public void disconnect() {

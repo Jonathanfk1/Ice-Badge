@@ -35,37 +35,41 @@ public class Control {
 	}
 
 	// NOT IMPLEMENTED CORRECTLY
-	public void connect(String ip, String name) {
-		this.actorNetGames.connect(ip, name);
-	}
+	// public void connect(String ip, String name) {
+	// 	this.actorNetGames.connect(ip, name);
+	// }
 
 	public void disconnect() {
 		this.actorNetGames.disconnect();
 	}
 	
-	public void delegateCreateNewGameToActorPlayer(Integer posicao) {
-		if (posicao == 1) {
-			actorNetGames.isMyTurn = true;
-		} else {
-			actorNetGames.isMyTurn = false;
-		}
-
-		actorPlayer.createGame(actorNetGames.isMyTurn);
-	}
-
-
 
 	public void delegateStartGameOnlineToNetGames() {
-		actorNetGames.startGameOnline();
+		this.actorNetGames.startGameOnline();
 	}
 
+	public void startPlayOverNet(boolean startsPlaying) {
+		this.actorPlayer.startPlayOverNet(startsPlaying);
+	}
 
-	public void setGameStart(int playerIdTurn) {
+	public String getOpponentName() {
+		return this.actorNetGames.getOpponentName();
+	}
+
+	public void setPlayersOrder() {
+	}
+	
+	public void createGame(boolean iStartPlaying) {
+		String opponentName = getOpponentName();
 		this.game = new Game(32, 32);
-		this.game.setPlayersOnBoard(playerIdTurn, this.actorPlayer);
+		this.game.setOpponentName(opponentName);
+		this.game.setPlayersOnBoard(iStartPlaying, this.actorPlayer);
+	}
+
+	public void startGame() {
 		this.currentMenu = new GUISelectCharacter(this);
 
-		if (playerIdTurn == 1) {
+		if (actorNetGames.isMyTurn) {
 			this.actorPlayer.setTurn(true);
 		}
 	}
@@ -133,11 +137,19 @@ public class Control {
 	}
 
 	public void connectToNetGames() {
-		this.actorNetGames.connect(mainMenu.getConnectionIp(), mainMenu.getConnectionName());
+		this.connected = this.actorNetGames.connect(mainMenu.getConnectionIp(), mainMenu.getConnectionName());
 	}
 
 	public ActorNetGames getActorNetGames() {
 		return actorNetGames;
+	}
+
+	public void sendStart() {
+		if(connected) {
+			this.actorNetGames.startGameOnline();
+		} else {
+			System.out.println("NOT CONNECTED");
+		}
 	}
 
 }

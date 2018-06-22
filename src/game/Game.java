@@ -12,31 +12,31 @@ public class Game {
 
 	public Game(int width, int height) {
 		this.board = new Board(height, width);
-		// this.opponent = new Player();
+		this.opponent = new Player();
 	}
 
 	public Position getPosition(int x, int y) {
 		return this.board.getPosition(x, y);
 	}
 
-	public boolean setPlayersOnBoard(int turn, Player player) {
+	public boolean setPlayersOnBoard(boolean turn, Player player) {
 		Position mainBases[] = this.board.getMainBases();
 
 		this.player = player;
 
-		if (turn == 1) {
+		boolean playersSet = false;
+
+		if (turn) {
 			this.player.setTurn(true);
 			this.player.addBase(mainBases[0]);
 			this.opponent.addBase(mainBases[1]);
-			return true;
-		} else if (turn == 2) {
+			playersSet = true;
+		} else if (!turn) {
 			this.player.addBase(mainBases[1]);
 			this.opponent.addBase(mainBases[0]);
-			return true;
-		} else {
-			System.out.println("'turn' flag invalid.");
-			return false;
+			playersSet = true;
 		}
+		return playersSet;
 	}
 
 	public String getPlayerName() {
@@ -108,6 +108,15 @@ public class Game {
 
 	public Player getOpponent() {
 		return this.opponent;
+	}
+
+	public Player createPlayer(String name) {
+		Player player = new Player(name);
+		return player;
+	}
+
+	public void setOpponentName(String opponentName) {
+		this.opponent.setName(opponentName);
 	}
 
 }
