@@ -103,6 +103,7 @@ public class ActorNetGames implements OuvidorProxy {
 				JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "Proxy is null.", "Proxy error", JOptionPane.ERROR_MESSAGE);
 			} else {
 				this.proxy_.conectar(ip, name);
+				JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "Sucessfully connected", "Connected", JOptionPane.INFORMATION_MESSAGE);
 				return connectionSuccess = true;
 			}
 		} catch (JahConectadoException e) {
