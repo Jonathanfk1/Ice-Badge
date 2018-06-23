@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 
 import actors.ActorPlayer;
 import board.Position;
+import br.ufsc.inf.leobr.cliente.exception.JahConectadoException;
+import br.ufsc.inf.leobr.cliente.exception.NaoPossivelConectarException;
 
 public class Control {
 
@@ -20,7 +22,9 @@ public class Control {
 	protected boolean connected;
 	protected boolean isFirstPlayer;
 	protected int charactersLeft;
-	protected GUIMainMenu mainMenu;
+	protected GUIMainMenu guiMainMenu;
+	protected GUIBoard guiBoard;
+	protected GUISelectCharacter guiSelectCharacter;
 	protected JFrame currentMenu;
 
 	public Control() {
@@ -30,14 +34,9 @@ public class Control {
 	}
 
 	public void runInitialMenu() {
-		this.mainMenu = new GUIMainMenu(this);
-		currentMenu = mainMenu;
+		this.guiMainMenu = new GUIMainMenu(this);
+		currentMenu = guiMainMenu;
 	}
-
-	// NOT IMPLEMENTED CORRECTLY
-	// public void connect(String ip, String name) {
-	// 	this.actorNetGames.connect(ip, name);
-	// }
 
 	public void disconnect() {
 		this.actorNetGames.disconnect();
@@ -55,13 +54,10 @@ public class Control {
 	public String getOpponentName() {
 		return this.actorNetGames.getOpponentName();
 	}
-
-	public void setPlayersOrder() {
-	}
 	
 	public void createGame(boolean iStartPlaying) {
 		String opponentName = getOpponentName();
-		this.game = new Game(32, 32);
+		this.game = new Game(this, 32, 32);
 		this.game.setOpponentName(opponentName);
 		this.game.setPlayersOnBoard(iStartPlaying, this.actorPlayer);
 	}
@@ -117,9 +113,6 @@ public class Control {
 		}
 	}
 
-	// #############################################
-	// TESTS
-
 	public Game getGame() {
 		return this.game;
 	}
@@ -137,7 +130,7 @@ public class Control {
 	}
 
 	public void connectToNetGames() {
-		this.connected = this.actorNetGames.connect(mainMenu.getConnectionIp(), mainMenu.getConnectionName());
+		this.connected = this.actorNetGames.connect(guiMainMenu.getConnectionIp(), guiMainMenu.getConnectionName());
 	}
 
 	public ActorNetGames getActorNetGames() {
@@ -148,8 +141,37 @@ public class Control {
 		if(connected) {
 			this.actorNetGames.startGameOnline();
 		} else {
-			System.out.println("NOT CONNECTED");
+			this.guiMainMenu.informNotConnected();
 		}
 	}
 
+	public void tellTurn(boolean turn) {
+		this.guiBoard.tellTurn(turn);
+	}
+
+	public void setGuiBoard(GUIBoard guiBoard) {
+		this.guiBoard = guiBoard;
+	}
+
+	public void setGuiMainMenu(GUIMainMenu guiMainMenu) {
+		this.guiMainMenu = guiMainMenu;
+	}
+
+	public void setGuiSelectCharacter(GUISelectCharacter guiSelectCharacter) {
+		this.guiSelectCharacter = guiSelectCharacter;
+	}
+
+	public JFrame getCurrentFrame() {
+		return this.currentMenu;
+	}
+
+	// public void notPossibleToConnectError(NaoPossivelConectarException e) {
+
+	// }
+
+	// public void alreadyConnectedError(JahConectadoException e) {
+
+	// }
+
+	
 }

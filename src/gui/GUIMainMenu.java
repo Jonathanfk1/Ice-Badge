@@ -18,6 +18,7 @@ import game.Control;
 
 public class GUIMainMenu extends JFrame {
 
+	private static final long serialVersionUID = 668941998137019373L;
 	protected JFrame frame_;
 	protected JPanel panel_;
 	protected Control control_;
@@ -25,6 +26,8 @@ public class GUIMainMenu extends JFrame {
 	public GUIMainMenu(Control control) {
 		this.control_ = control;
 		this.panel_ = new JPanel();
+
+		this.control_.setGuiMainMenu(this);
 
 		this.setFrame();
 		this.setButtons();
@@ -49,6 +52,10 @@ public class GUIMainMenu extends JFrame {
                 null,
                 "localhost");
 		return ip;
+	}
+
+	public void informNotConnected() {
+		JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "You're not connected, can't start game.", "Not connected", JOptionPane.ERROR_MESSAGE);
 	}
 	
 	public String getConnectionName() {

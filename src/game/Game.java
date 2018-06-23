@@ -9,10 +9,12 @@ public class Game {
 	protected Board board;
 	protected Player player;
 	protected Player opponent;
+	protected Control control;
 
-	public Game(int width, int height) {
+	public Game(Control control, int width, int height) {
 		this.board = new Board(height, width);
 		this.opponent = new Player();
+		this.control = control;
 	}
 
 	public Position getPosition(int x, int y) {
@@ -25,15 +27,17 @@ public class Game {
 		this.player = player;
 
 		boolean playersSet = false;
-
+		
 		if (turn) {
 			this.player.setTurn(true);
 			this.player.addBase(mainBases[0]);
 			this.opponent.addBase(mainBases[1]);
+			this.control.tellTurn(turn);
 			playersSet = true;
 		} else if (!turn) {
 			this.player.addBase(mainBases[1]);
 			this.opponent.addBase(mainBases[0]);
+			this.control.tellTurn(turn);
 			playersSet = true;
 		}
 		return playersSet;

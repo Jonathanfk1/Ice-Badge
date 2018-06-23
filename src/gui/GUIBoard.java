@@ -27,6 +27,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import actors.ActorPlayer;
  
 public class GUIBoard extends JFrame {
 
@@ -36,6 +38,7 @@ public class GUIBoard extends JFrame {
 	public GUIBoard(Control control) {
 		this.control = control;
 		this.panel = new JPanel();
+		this.control.setGuiBoard(this);
 
 		this.setFrame();
 		this.setButtons();
@@ -99,9 +102,22 @@ public class GUIBoard extends JFrame {
 
 
 	private void setButtons() {
-
+		JButton changeTurnButton = setChangeTurnButton();
 	}
 
+	private JButton setChangeTurnButton() {
+		return new JButton();
+	}
 
+	public void tellTurn(boolean turn) { 
+		if (turn) {
+			JOptionPane.showMessageDialog(this, "It's your turn.");		
+		} else {
+			JOptionPane.showMessageDialog(this, "Wait for opponent to move.");
+		}
+	}
+
+	public void tellItsTurn() {
+	}
 
 }

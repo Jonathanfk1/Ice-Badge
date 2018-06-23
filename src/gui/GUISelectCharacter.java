@@ -15,6 +15,7 @@ import game.TypeCharacter;
 
 public class GUISelectCharacter extends JFrame {
 
+	private static final long serialVersionUID = 862549634422345844L;
 	protected Control control;
 	protected JPanel panel_;
 
@@ -22,6 +23,8 @@ public class GUISelectCharacter extends JFrame {
 		this.control = control;
 		this.panel_ = new JPanel();
 
+		this.control.setGuiSelectCharacter(this);
+		
 		this.setFrame();
 		this.setButtons();
 	}

@@ -5,7 +5,8 @@ import game.Action;
 
 public class LaunchAction implements Jogada {
     
-    private Action action;
+    private static final long serialVersionUID = 3631376366041293471L;
+	private Action action;
 
     public LaunchAction(Action action) {
         super();

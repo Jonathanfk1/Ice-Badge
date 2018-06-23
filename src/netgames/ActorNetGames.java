@@ -2,7 +2,6 @@ package netgames;
 
 import javax.swing.JOptionPane;
 
-import actors.ActorPlayer;
 import br.ufsc.inf.leobr.cliente.Jogada;
 import br.ufsc.inf.leobr.cliente.OuvidorProxy;
 import br.ufsc.inf.leobr.cliente.Proxy;
@@ -13,10 +12,10 @@ import br.ufsc.inf.leobr.cliente.exception.NaoJogandoException;
 import br.ufsc.inf.leobr.cliente.exception.NaoPossivelConectarException;
 import game.Action;
 import game.Control;
-import gui.GUIMainMenu;
 
 public class ActorNetGames implements OuvidorProxy {
 
+	private static final long serialVersionUID = 6879226942687723339L;
 	protected int id;
 	protected Proxy proxy_;
 	protected Control control_;
@@ -26,6 +25,7 @@ public class ActorNetGames implements OuvidorProxy {
 		super();
 		proxy_ = Proxy.getInstance();
 		proxy_.addOuvinte(this);
+		this.control_ = control;
 	}
 
 	@Override
@@ -49,32 +49,28 @@ public class ActorNetGames implements OuvidorProxy {
 
 	@Override
 	public void finalizarPartidaComErro(String message) {
-		// TODO Auto-generated method stub
-
+		JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), message);
 	}
 
 	@Override
 	public void receberMensagem(String msg) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void receberJogada(Jogada jogada) {
 		LaunchAction launchAction = (LaunchAction) jogada;
 		this.control_.receiveLaunchedAction(launchAction.getLaunchAction());
+		isMyTurn = true;
 	}
 
 	@Override
 	public void tratarConexaoPerdida() {
-		// TODO Auto-generated method stub
-
+		JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "A conexão com o servidor foi perdida!");
 	}
 
 	@Override
 	public void tratarPartidaNaoIniciada(String message) {
-		// TODO Auto-generated method stub
-
+		JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "Não foi possível iniciar a partida");
 	}
 
 	public String getOpponentName() {
@@ -93,6 +89,7 @@ public class ActorNetGames implements OuvidorProxy {
 		LaunchAction launchAction = new LaunchAction(action);
 		try {
 			proxy_.enviaJogada(launchAction);
+			isMyTurn = false;
 		} catch (NaoJogandoException e) {
 			new JOptionPane().setMessage("Not playing.");
 			e.printStackTrace();
@@ -103,19 +100,19 @@ public class ActorNetGames implements OuvidorProxy {
 		boolean connectionSuccess = false;
 		try {
 			if(this.proxy_ == null) {
-				new JOptionPane().showMessageDialog(null, "Proxy is null.", "Proxy error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "Proxy is null.", "Proxy error", JOptionPane.ERROR_MESSAGE);
 			} else {
 				this.proxy_.conectar(ip, name);
 				return connectionSuccess = true;
 			}
 		} catch (JahConectadoException e) {
-			new JOptionPane().setMessage("You're already connected.");
+			JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "You're already connected.", "Already connected", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		} catch (NaoPossivelConectarException e) {
-			new JOptionPane().setMessage("Connection failure.");
+			JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "Connection failure.", "Can't connect", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		} catch (ArquivoMultiplayerException e) {
-			new JOptionPane().setMessage("Multiplayer Property files error.");
+			JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "Multiplayer Property files error.", "Property eror", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 		return connectionSuccess;
@@ -125,8 +122,7 @@ public class ActorNetGames implements OuvidorProxy {
 		try {
 			this.proxy_.desconectar();
 		} catch (NaoConectadoException e) {
-
-			new JOptionPane().setMessage("You're already disconnected.");
+			JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "You're already disconnected.", "Already disconnected", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 
