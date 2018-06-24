@@ -11,8 +11,7 @@ public class Game {
 	protected Player opponent;
 	protected Control control;
 
-	public Game(Control control, int width, int height) {
-		this.board = new Board(height, width);
+	public Game(Control control) {
 		this.opponent = new Player();
 		this.control = control;
 	}
@@ -22,6 +21,9 @@ public class Game {
 	}
 
 	public boolean setPlayersOnBoard(boolean turn, Player player) {
+		
+
+
 		Position mainBases[] = this.board.getMainBases();
 
 		this.player = player;
@@ -75,36 +77,38 @@ public class Game {
 		return new Action(null, null, TypeAction.CHANGE_TURN);
 	}
 
-	public void selectCharacter(ActorPlayer actorPlayer, TypeCharacter type) {
-		Character character;
-
+	public Character selectCharacter(TypeCharacter type) {
 		switch (type) {
 
 		case SWORDSMAN:
-			character = new Character(100, 50, 3, 4, TypeCharacter.SWORDSMAN);
-			player.addCharacter(character);
-			this.board.setCharacterOnBoard(player, character);
-			break;
+			return new Character(100, 50, 3, 4, TypeCharacter.SWORDSMAN);
+			// player.addCharacter(character);
+			// this.board.setCharacterOnBoard(player, character);
+			// break;
 
 		case ARCHER:
-			character = new Character(100, 35, 7, 3, TypeCharacter.ARCHER);
-			player.addCharacter(character);
-			this.board.setCharacterOnBoard(player, character);
-			break;
+			return new Character(100, 35, 7, 3, TypeCharacter.ARCHER);
+			// player.addCharacter(character);
+			// this.board.setCharacterOnBoard(player, character);
+			// break;
 
 		case BARD:
-			character = new Character(100, 30, 5, 5, TypeCharacter.BARD);
-			player.addCharacter(character);
-			this.board.setCharacterOnBoard(player, character);
-			break;
+			return new Character(100, 30, 5, 5, TypeCharacter.BARD);
+			// player.addCharacter(character);
+			// this.board.setCharacterOnBoard(player, character);
+			// break;
 
 		case CLERIG:
-			character = new Character(100, 25, 2, 8, TypeCharacter.CLERIG);
-			player.addCharacter(character);
-			this.board.setCharacterOnBoard(player, character);
-			break;
+			return new Character(100, 25, 2, 8, TypeCharacter.CLERIG);
+			// player.addCharacter(character);
+			// this.board.setCharacterOnBoard(player, character);
+			// break;
 
+
+		default: 
+			System.out.println("Invalid character type. Returning Null.");
 		}
+		return null;
 	}
 
 	// ##########################
@@ -121,6 +125,19 @@ public class Game {
 
 	public void setOpponentName(String opponentName) {
 		this.opponent.setName(opponentName);
+	}
+
+	public void createBoard(Game game, int i, int j) {
+		this.board = new Board(game, i, j);
+		this.board.setGame(this);
+	}
+
+	public void openSelectCharacterMenu() {
+		this.control.openSelectCharacterMenu();
+	}
+
+	public void setBoard(Board board) {
+		this.board = board;
 	}
 
 }

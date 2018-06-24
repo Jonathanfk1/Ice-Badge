@@ -27,8 +27,6 @@ public class GUIMainMenu extends JFrame {
 		this.control_ = control;
 		this.panel_ = new JPanel();
 
-		this.control_.setGuiMainMenu(this);
-
 		this.setFrame();
 		this.setButtons();
 	}
@@ -38,7 +36,7 @@ public class GUIMainMenu extends JFrame {
 		this.setLayout(new GridBagLayout());
 		this.add(panel_, gbc);
 		this.setVisible(true);
-		this.setSize(new Dimension(300, 450));
+		this.setSize(new Dimension(450, 400));
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
@@ -99,7 +97,7 @@ public class GUIMainMenu extends JFrame {
 				}
 			}
 		});
-		this.panel_.add(connect, gbc);
+		this.panel_.add(disconnect, gbc);
 
 		// ################## START GAME ##################
 
@@ -113,7 +111,7 @@ public class GUIMainMenu extends JFrame {
 					
 					// control_.startGame();
 					
-					control_.sendStart();
+					control_.openSelectCharacterMenu();
 
 					// new GUIBoard(control_);
 					

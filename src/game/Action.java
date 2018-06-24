@@ -3,18 +3,23 @@ package game;
 import board.Position;
 
 public class Action {
-	protected Position playerPosition;
+	protected Position selectedPosition;
 	protected Position finalPosition;
 	protected TypeAction type_;
 
-	public Action(Position playerPosition, Position finalPosition, TypeAction type) {
-		this.playerPosition = playerPosition;
+	public Action(Position selectedPosition, Position finalPosition, TypeAction type) {
+		this.selectedPosition = selectedPosition;
 		this.finalPosition = finalPosition;
 		this.type_ = type;
 	}
 
+	public Action(Position selectedPosition, TypeAction type) {
+		this.selectedPosition = selectedPosition;
+		this.type_ = type;
+	}
+
 	public Position getPlayerPosition() {
-		return playerPosition;
+		return selectedPosition;
 	}
 
 	public Position getFinalPosition() {

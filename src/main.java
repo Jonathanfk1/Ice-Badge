@@ -1,5 +1,8 @@
 import actors.ActorPlayer;
+import board.Board;
 import game.Control;
+import game.Game;
+import game.Player;
 import gui.GUIBoard;
 import netgames.ActorNetGames;
 import tests.Tests;
@@ -21,7 +24,18 @@ public class main {
 		
 		// control.tellIsFirstToPlay();
 		
+
 		control.runInitialMenu();
+
+		control.setGame(new Game(control));
+		
+		Board board = new Board(control.getGame(), 32, 32);
+		control.getGame().setBoard(board);
+		Player player = control.getGame().createPlayer("PlayerName");
+		control.getGame().setPlayersOnBoard(true, player);
+		control.openSelectCharacterMenu();
+		// control.createGame(control.getActorPlayer().isTurn());
+
 
 	}
 

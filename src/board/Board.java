@@ -1,6 +1,7 @@
 package board;
 
 import game.Character;
+import game.Game;
 import game.Player;
 
 public class Board {
@@ -11,17 +12,10 @@ public class Board {
 	protected Position mainBases[];
 	protected int rowSize;
 	protected int columnSize;
+	protected Game game;
 
-	public Board(int rowSize, int columnSize, int numberOfPlayers) {
-		this.rowSize = rowSize;
-		this.columnSize = columnSize;
-		this.positions = new Position[rowSize][columnSize];
-		this.generateBoard();
-		this.setMainBases(numberOfPlayers);
-	}
-
-
-	public Board(int rowSize, int columnSize) {
+	public Board(Game game, int rowSize, int columnSize) {
+		this.game = game;
 		this.rowSize = rowSize;
 		this.columnSize = columnSize;
 		this.positions = new Position[rowSize][columnSize];
@@ -68,7 +62,11 @@ public class Board {
 	}
 
 	public void setCharacterOnBoard(Player player, Character character) {
+		
+	}
 
+	public void setGame(Game game) {
+		this.game = game;
 	}
 
 }

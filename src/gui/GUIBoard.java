@@ -96,8 +96,8 @@ public class GUIBoard extends JFrame {
 		secondTile.setBounds(0, 0, 15, 15);
 		secondTile.setVisible(true);
 
-		Board board = new Board(50, 50);
-		return board;
+		// Board board = new Board(50, 50);
+		return null;
 	}
 
 
