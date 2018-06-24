@@ -70,15 +70,15 @@ public class Player {
 		return false;
 	}
 
-	public void addBase(Position base) {
+	public void setMainBase(Position base) {
 		this.bases_.add(base);
 	}
 
-	public void removeBase(Position base) {
-		if (this.bases_.size() > 1) {
-			this.bases_.remove(base);
-		}
-	}
+	// public void removeMainBase(Position base) {
+	// 	if (this.bases_.size() > 1) {
+	// 		this.bases_.remove(base);
+	// 	}
+	// }
 
 	public Position getMainBase() {
 		Position mainBase = this.bases_.get(0);

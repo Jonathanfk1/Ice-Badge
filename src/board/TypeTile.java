@@ -2,11 +2,10 @@ package board;
 
 public enum TypeTile {
 	WATER,
-	GROUND,
 	GRASS,
 	MOUNTAIN,
-	MAIN_BASE_1,
-	MAIN_BASE_2,
+	MAIN_BASE_SELF,
+	MAIN_BASE_OPPONENT,
 	TREE,
 	ROCK;
 }

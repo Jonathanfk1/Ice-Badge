@@ -27,13 +27,19 @@ public class main {
 
 		control.runInitialMenu();
 
+		control.connectToNetGames();
+
 		control.setGame(new Game(control));
 		
-		Board board = new Board(control.getGame(), 32, 32);
+		Board board = new Board(control.getGame(), 16, 16);
 		control.getGame().setBoard(board);
 		Player player = control.getGame().createPlayer("PlayerName");
 		control.getGame().setPlayersOnBoard(true, player);
 		control.openSelectCharacterMenu();
+
+		
+
+		new GUIBoard(control);
 		// control.createGame(control.getActorPlayer().isTurn());
 
 

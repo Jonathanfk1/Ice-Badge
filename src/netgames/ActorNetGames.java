@@ -75,6 +75,7 @@ public class ActorNetGames implements OuvidorProxy {
 	public void receberJogada(Jogada jogada) {
 		LaunchAction launchAction = (LaunchAction) jogada;
 		this.control.receiveLaunchedAction(launchAction.getLaunchAction());
+
 		isMyTurn = true;
 	}
 

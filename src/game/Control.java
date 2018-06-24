@@ -5,6 +5,7 @@ import gui.GUISelectCharacter;
 import gui.GUIBoard;
 import netgames.ActorNetGames;
 
+import java.awt.dnd.DragSourceAdapter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -68,6 +69,8 @@ public class Control {
 		// this.game.openSelectCharacterMenu();
 		this.game.createBoard(this.game, 32, 32);
 		this.game.setPlayersOnBoard(iStartPlaying, this.actorPlayer);
+		// this.guiSelectCharacter.dispose();
+		this.guiBoard = new GUIBoard(this);
 	}
 
 	public void startGame() {
@@ -129,7 +132,18 @@ public class Control {
 	}
 
 	public void receiveLaunchedAction(Action launchAction) {
+		switch(launchAction.getType()) {
+			case SETTLE_TEAM:
+			case ATTACK:
+			case MOVE:
+			case CHANGE_TURN:
+			case SELECT_CHARACTER:
+		}
+		if (launchAction.getListOfCharacters() != null) {
+			this.game.addOpponentsCharacters(launchAction.getListOfCharacters());
+		} else {
 
+		}
 	}
 
 	public void setActorPlayer(ActorPlayer actorPlayer) {

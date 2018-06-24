@@ -9,11 +9,18 @@ public class Position {
 	protected Character character;
 	protected TypeTile type;
 	protected String image;
+	protected boolean isOccupied;
+	protected boolean isObstacle;
 
 	public Position(int x, int y, TypeTile type) {
 		this.x = x;
 		this.y = y;
 		this.type = type;
+		if (type == TypeTile.GRASS) {
+			this.isObstacle = false;
+		} else {
+			this.isObstacle = true;			
+		}
 	}
 
 	public Character getCharacter() {

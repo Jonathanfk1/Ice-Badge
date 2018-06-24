@@ -1,6 +1,9 @@
 package game;
 
 import board.Position;
+
+import java.util.List;
+
 import actors.ActorPlayer;
 import board.Board;
 
@@ -21,24 +24,20 @@ public class Game {
 	}
 
 	public boolean setPlayersOnBoard(boolean turn, Player player) {
-		
-
-
-		Position mainBases[] = this.board.getMainBases();
-
 		this.player = player;
 
 		boolean playersSet = false;
 		
 		if (turn) {
 			this.player.setTurn(true);
-			this.player.addBase(mainBases[0]);
-			this.opponent.addBase(mainBases[1]);
+			this.player.setMainBase(this.board.getSelfMainBase());
+			this.opponent.setMainBase(this.board.getOpponentMainBase());
 			this.control.tellTurn(turn);
 			playersSet = true;
 		} else if (!turn) {
-			this.player.addBase(mainBases[1]);
-			this.opponent.addBase(mainBases[0]);
+			this.player.setTurn(true);
+			this.player.setMainBase(this.board.getSelfMainBase());
+			this.opponent.setMainBase(this.board.getOpponentMainBase());
 			this.control.tellTurn(turn);
 			playersSet = true;
 		}
@@ -138,6 +137,14 @@ public class Game {
 
 	public void setBoard(Board board) {
 		this.board = board;
+	}
+
+	public void addOpponentsCharacters(List<Character> listOfCharacters) {
+		this.board.setCharactersOnBoard(this.opponent, listOfCharacters);
+	}
+
+	public Board getBoard() {
+		return this.board;
 	}
 
 }
