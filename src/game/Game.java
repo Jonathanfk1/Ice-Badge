@@ -16,6 +16,7 @@ public class Game {
 
 	public Game(Control control) {
 		this.opponent = new Player();
+		this.player = new Player();
 		this.control = control;
 	}
 
@@ -23,29 +24,11 @@ public class Game {
 		return this.board.getPosition(x, y);
 	}
 
-	public boolean setPlayersOnBoard(boolean turn, Player player) {
-		this.player = player;
-
-		boolean playersSet = false;
-		
-		if (turn) {
-			this.player.setTurn(true);
-			this.player.setMainBase(this.board.getSelfMainBase());
-			this.opponent.setMainBase(this.board.getOpponentMainBase());
-			this.control.tellTurn(turn);
-			playersSet = true;
-		} else if (!turn) {
-			this.player.setTurn(true);
-			this.player.setMainBase(this.board.getSelfMainBase());
-			this.opponent.setMainBase(this.board.getOpponentMainBase());
-			this.control.tellTurn(turn);
-			playersSet = true;
-		}
-		return playersSet;
-	}
-
-	public String getPlayerName() {
-		return this.player.getName();
+	public void setBasesForPlayers(boolean turn) {
+		this.player.setTurn(true);
+		this.player.setMainBase(this.board.getSelfMainBase());
+		this.opponent.setMainBase(this.board.getOpponentMainBase());
+		this.control.tellTurn(turn);
 	}
 
 	public Action selectPosition(Position clickedPosition) {
@@ -117,9 +100,12 @@ public class Game {
 		return this.opponent;
 	}
 
+	public String getOpponentName() {
+		return this.opponent.getName();
+	}
+
 	public Player createPlayer(String name) {
-		Player player = new Player(name);
-		return player;
+		return this.player = new Player(name);
 	}
 
 	public void setOpponentName(String opponentName) {
@@ -128,7 +114,7 @@ public class Game {
 
 	public void createBoard(Game game, int i, int j) {
 		this.board = new Board(game, i, j);
-		this.board.setGame(this);
+		this.board.boardSetup();
 	}
 
 	public void openSelectCharacterMenu() {
@@ -140,11 +126,19 @@ public class Game {
 	}
 
 	public void addOpponentsCharacters(List<Character> listOfCharacters) {
-		this.board.setCharactersOnBoard(this.opponent, listOfCharacters);
+		this.board.setOpponentsCharactersOnBoard(listOfCharacters);
 	}
 
 	public Board getBoard() {
 		return this.board;
+	}
+
+	public Player getPlayer() {
+		return this.player;
+	}
+
+	public void addSelectedCharacters(List<Character> selectedCharacters) {
+		player.addCharacters(selectedCharacters);
 	}
 
 }

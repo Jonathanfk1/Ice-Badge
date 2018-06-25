@@ -1,5 +1,7 @@
 package game;
 
+import board.Position;
+
 public class Character {
 
 	protected int life_;
@@ -9,6 +11,7 @@ public class Character {
 	protected boolean moved_;
 	protected boolean attacked_;
 	protected TypeCharacter type_;
+	private Position position;
 
 	public Character(int life, int powerAttack, int rangeAttack, int rangeMove, TypeCharacter type) {
 		this.life_ = life;
@@ -18,7 +21,7 @@ public class Character {
 		this.type_ = type;
 		this.moved_ = false;
 		this.attacked_ = false;
-
+		this.position = new Position(0, 0, null);
 	}
 	
 	public int getLife() {
@@ -35,6 +38,10 @@ public class Character {
 
 	public boolean getAttacked() {
 		return this.attacked_;
+	}
+
+	public Position getPosition() {
+		return this.position;
 	}
 
 }

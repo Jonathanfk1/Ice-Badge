@@ -20,6 +20,7 @@ import board.Position;
 public class Control {
 
 	protected static final int NUMBER_OF_CHARACTERS = 6;
+	protected static final int DEFAULT_BOARD_SQUARE_SIZE = 16;
 
 	protected ActorNetGames actorNetGames;
 	protected ActorPlayer actorPlayer;
@@ -60,15 +61,23 @@ public class Control {
 		this.actorPlayer.startPlayOverNet(startsPlaying);
 	}
 
-	public String getOpponentName() {
-		return this.actorNetGames.getOpponentName();
+	public String findOpponentName() {
+		return this.actorNetGames.askForOpponentName();
 	}
 	
 	public void createGame(boolean iStartPlaying) {
-		this.game.setOpponentName(getOpponentName());
+		if(connected) {
+			this.game.setOpponentName(findOpponentName());
+			// this.game.setOpponentsCharacters();
+		} else {
+			this.game.setOpponentName("Offline Player");
+		}
 		// this.game.openSelectCharacterMenu();
-		this.game.createBoard(this.game, 32, 32);
-		this.game.setPlayersOnBoard(iStartPlaying, this.actorPlayer);
+		this.game.addSelectedCharacters(selectedCharacters);
+		this.game.createBoard(this.game, DEFAULT_BOARD_SQUARE_SIZE, DEFAULT_BOARD_SQUARE_SIZE);
+		// this.game.getBoard().setMainBases(iStartPlaying);
+		// this.game.setBasesForPlayers(iStartPlaying);
+		// this.game.board.generateBoardObjects();
 		// this.guiSelectCharacter.dispose();
 		this.guiBoard = new GUIBoard(this);
 	}
@@ -132,17 +141,29 @@ public class Control {
 	}
 
 	public void receiveLaunchedAction(Action launchAction) {
-		switch(launchAction.getType()) {
-			case SETTLE_TEAM:
-			case ATTACK:
-			case MOVE:
-			case CHANGE_TURN:
-			case SELECT_CHARACTER:
-		}
 		if (launchAction.getListOfCharacters() != null) {
 			this.game.addOpponentsCharacters(launchAction.getListOfCharacters());
 		} else {
+			switch(launchAction.getType()) {
+				case SETTLE_TEAM:
 
+				break;
+				case ATTACK:
+
+				break;
+				case MOVE:
+
+				break;
+				case CHANGE_TURN:
+
+				break;
+				case SELECT_CHARACTER:
+
+				break;
+				default:
+
+				break;
+			}
 		}
 	}
 

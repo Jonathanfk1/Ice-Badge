@@ -36,7 +36,7 @@ public class GUIMainMenu extends JFrame {
 		this.setLayout(new GridBagLayout());
 		this.add(panel_, gbc);
 		this.setVisible(true);
-		this.setSize(new Dimension(450, 400));
+		this.setSize(new Dimension(500, 300));
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	

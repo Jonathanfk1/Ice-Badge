@@ -5,6 +5,7 @@ import board.Position;
 import board.TypeTile;
 import board.Board;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -35,16 +36,17 @@ import actors.ActorPlayer;
 public class GUIBoard extends JFrame {
 
 	private Control control;
-	private JPanel panel;
+	private JPanel lowerPanel;
+	private JPanel upperPanel;
 	private TypeTile[][] map;
 	private Board board;
 	private ImageIcon grassIcon;
 	private ImageIcon baseIcon;
 	private ImageIcon treeIcon;
 	private ImageIcon waterIcon;
-	private ImageIcon char1Icon;
-	private ImageIcon char2Icon;
-	private ImageIcon char3Icon;
+	private ImageIcon charIcon1;
+	private ImageIcon charIcon2;
+	private ImageIcon charIcon3;
 	private ImageIcon mountainIcon;
 	private ImageIcon rockIcon;
 
@@ -57,7 +59,9 @@ public class GUIBoard extends JFrame {
 		this.setFrame();
 		this.setPanel();
 		this.setBoard();
-		this.add(this.panel);
+		this.setButtons();
+		this.add(this.upperPanel, BorderLayout.NORTH);
+		this.add(this.lowerPanel, BorderLayout.SOUTH);
 		this.pack();
 		this.setVisible(true);
 		// this.setButtons();
@@ -68,7 +72,7 @@ public class GUIBoard extends JFrame {
 		// // this.add(this.parent, gbc);
 		// this.setSize(new Dimension(1000, 300));
 		// this.setLocation(300, 500);	
-		// this.add(this.panel);
+		// this.add(this.upperPanel);
 		// // this.pack();
 		// // this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		// this.setVisible(true);
@@ -80,11 +84,17 @@ public class GUIBoard extends JFrame {
 	}
 
 	public void setPanel() {
-		this.panel = new JPanel();
-		// this.panel.setSize(new Dimension(500, 500));
-		this.panel.setBackground(new Color(111));
-        this.panel.setLayout(new GridLayout(this.board.getRowSize()-1, this.board.getColumnSize()-1));
-		this.panel.setPreferredSize(new Dimension(500, 500));
+		this.upperPanel = new JPanel();
+		// this.upperPanel.setSize(new Dimension(500, 500));
+		this.upperPanel.setBackground(Color.GREEN);
+        this.upperPanel.setLayout(new GridLayout(this.board.getRowSize(), this.board.getColumnSize()));
+		this.upperPanel.setPreferredSize(new Dimension(500, 500));
+
+		this.lowerPanel = new JPanel();
+		// this.upperPanel.setSize(new Dimension(500, 500));
+		this.lowerPanel.setBackground(Color.PINK);
+        this.lowerPanel.setLayout(new GridLayout(1, 3));
+		this.lowerPanel.setPreferredSize(new Dimension(200, 60));
 	}
 	
 	public void updateMap() {
@@ -101,64 +111,68 @@ public class GUIBoard extends JFrame {
 
 	public void setIconImages() {
 		ImageIcon grassIcon = new ImageIcon("resources/grassTile.png");
-		grassIcon.setImage(grassIcon.getImage().getScaledInstance(15, 15, java.awt.Image.SCALE_SMOOTH));
+		grassIcon.setImage(grassIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
 		this.grassIcon = grassIcon;
 
-		ImageIcon baseIcon = new ImageIcon("resources/baseIcon.png");
-		baseIcon.setImage(baseIcon.getImage().getScaledInstance(15, 15, java.awt.Image.SCALE_SMOOTH));
+		ImageIcon baseIcon = new ImageIcon("resources/baseTile.png");
+		baseIcon.setImage(baseIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
 		this.baseIcon = baseIcon;
 
-		ImageIcon treeIcon = new ImageIcon("resources/treeIcon.png");
-		treeIcon.setImage(treeIcon.getImage().getScaledInstance(15, 15, java.awt.Image.SCALE_SMOOTH));
+		ImageIcon treeIcon = new ImageIcon("resources/treeTile.png");
+		treeIcon.setImage(treeIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
 		this.treeIcon = treeIcon;
 
-		ImageIcon mountainIcon = new ImageIcon("resources/mountainIcon.png");
-		mountainIcon.setImage(mountainIcon.getImage().getScaledInstance(15, 15, java.awt.Image.SCALE_SMOOTH));
+		ImageIcon mountainIcon = new ImageIcon("resources/mountainTile.png");
+		mountainIcon.setImage(mountainIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
 		this.mountainIcon = mountainIcon;
 
-		ImageIcon waterIcon = new ImageIcon("resources/waterIcon.png");
-		waterIcon.setImage(waterIcon.getImage().getScaledInstance(15, 15, java.awt.Image.SCALE_SMOOTH));
+		ImageIcon waterIcon = new ImageIcon("resources/waterTile.png");
+		waterIcon.setImage(waterIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
 		this.waterIcon = waterIcon;
 
-		ImageIcon char1Icon = new ImageIcon("resources/char1Icon.png");
-		char1Icon.setImage(char1Icon.getImage().getScaledInstance(15, 15, java.awt.Image.SCALE_SMOOTH));
-		this.char1Icon = char1Icon;
+		ImageIcon charIcon1 = new ImageIcon("resources/swordsmanTile1.png");
+		charIcon1.setImage(charIcon1.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
+		this.charIcon1 = charIcon1;
 
-		ImageIcon char2Icon = new ImageIcon("resources/char2Icon.png");
-		char2Icon.setImage(char2Icon.getImage().getScaledInstance(15, 15, java.awt.Image.SCALE_SMOOTH));
-		this.char2Icon = char2Icon;
+		ImageIcon charIcon2 = new ImageIcon("resources/clericTile1.png");
+		charIcon2.setImage(charIcon2.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
+		this.charIcon2 = charIcon2;
 
-		ImageIcon rockIcon = new ImageIcon("resources/rockIcon.png");
-		rockIcon.setImage(rockIcon.getImage().getScaledInstance(15, 15, java.awt.Image.SCALE_SMOOTH));
+		ImageIcon charIcon3 = new ImageIcon("resources/warriorTile.png");
+		charIcon3.setImage(charIcon3.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
+		this.charIcon3 = charIcon3;
+
+		ImageIcon rockIcon = new ImageIcon("resources/rockTile.png");
+		rockIcon.setImage(rockIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
 		this.rockIcon = rockIcon;
 
 	}
 
 
 	public Board setBoard() {
-		Position[][] listOfPositions = this.board.getPositions();
+		// Position[][] listOfPositions = this.board.getPositions();
 		
 		// ImageIcon icon = new ImageIcon("resources/grassTile.png");
-		// icon.setImage(icon.getImage().getScaledInstance(15, 15, java.awt.Image.SCALE_SMOOTH));
+		// icon.setImage(icon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
 		// Board board = new Board(50, 50);
 		
-		ImageIcon icon = new ImageIcon("resources/grassTile.png");
-		icon.setImage(icon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
+		// ImageIcon icon = new ImageIcon("resources/grassTile.png");
+		// icon.setImage(icon.getImage().getScaledInstance(35, 35, java.awt.Image.SCALE_SMOOTH));
 
 		
 		setIconImages();
 		updateMap();
 
-		for (int i = 0; i < board.getRowSize()-1 ; i++) {
-			for (int j = 0; j < board.getColumnSize()-1; j++) {
+		for (int i = 0; i < board.getRowSize(); i++) {
+			for (int j = 0; j < board.getColumnSize(); j++) {
 				JButton tile = new JButton();
-				tile.setPreferredSize(new Dimension(20, 20));
+				tile.setPreferredSize(new Dimension(15, 15));
 				tile.setContentAreaFilled(false);
-				// secondTile.setLayout(null);
+				// secondTile.setLayout(null);localhost
 				TypeTile typeOfTile = this.map[i][j];
 				switch(typeOfTile) {
 					case GRASS:
-						tile.setIcon(icon);
+						tile.setIcon(this.grassIcon);
 						tile.setActionCommand("grass");
 						tile.addActionListener(new ActionListener() {
 							@Override
@@ -168,7 +182,9 @@ public class GUIBoard extends JFrame {
 								}
 							}
 						});
-						this.panel.add(tile);
+						this.upperPanel.add(tile);
+						System.out.println("Added tile of type: " + typeOfTile.toString()
+						+ " to position " + i + " , " + j);
 						break;
 					case WATER:
 						tile.setIcon(this.waterIcon);
@@ -181,7 +197,9 @@ public class GUIBoard extends JFrame {
 								}
 							}
 						});
-						this.panel.add(tile);
+						this.upperPanel.add(tile);
+						System.out.println("Added tile of type: " + typeOfTile.toString()
+						+ " to position " + i + " , " + j);
 						break;
 					case MOUNTAIN:
 						tile.setIcon(this.mountainIcon);
@@ -194,7 +212,9 @@ public class GUIBoard extends JFrame {
 								}
 							}
 						});
-						this.panel.add(tile);
+						this.upperPanel.add(tile);
+						System.out.println("Added tile of type: " + typeOfTile.toString()
+						+ " to position " + i + " , " + j);
 						break;
 					case ROCK:
 						tile.setIcon(this.rockIcon);
@@ -207,10 +227,12 @@ public class GUIBoard extends JFrame {
 								}
 							}
 						});
-						this.panel.add(tile);
+						this.upperPanel.add(tile);
+						System.out.println("Added tile of type: " + typeOfTile.toString()
+						+ " to position " + i + " , " + j);
 						break;
 					case TREE:
-						tile.setIcon(treeIcon);
+						tile.setIcon(this.treeIcon);
 						tile.setActionCommand("tree");
 						tile.addActionListener(new ActionListener() {
 							@Override
@@ -220,27 +242,114 @@ public class GUIBoard extends JFrame {
 								}
 							}
 						});
-						this.panel.add(tile);
-						break;
+						this.upperPanel.add(tile);
+						System.out.println("Added tile of type: " + typeOfTile.toString()
+						+ " to position " + i + " , " + j);
+					break;
+					case MAIN_BASE_OPPONENT:
+							tile.setIcon(this.baseIcon);
+							tile.setActionCommand("base");
+							tile.addActionListener(new ActionListener() {
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									if (e.getActionCommand() == "base") {
+										System.out.println("clicked base");
+									}
+								}
+							});
+							this.upperPanel.add(tile);
+							System.out.println("Added tile of type: " + typeOfTile.toString()
+							+ " to position " + i + " , " + j);
+					break;
+					case MAIN_BASE_SELF:
+							tile.setIcon(this.baseIcon);
+							tile.setActionCommand("base");
+							tile.addActionListener(new ActionListener() {
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									if (e.getActionCommand() == "base") {
+										System.out.println("clicked base");
+									}
+								}
+							});
+							this.upperPanel.add(tile);
+							System.out.println("Added tile of type: " + typeOfTile.toString()
+							+ " to position " + i + " , " + j);
+					break;
+					case CHARACTER_TYPE_1:
+						tile.setIcon(this.charIcon1);
+						tile.setActionCommand("base");
+						tile.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								if (e.getActionCommand() == "base") {
+									System.out.println("clicked base");
+								}
+							}
+						});
+						this.upperPanel.add(tile);
+						System.out.println("Added tile of type: " + typeOfTile.toString()
+						+ " to position " + i + " , " + j);
+					break;
+					case CHARACTER_TYPE_2:
+						tile.setIcon(this.charIcon2);
+						tile.setActionCommand("base");
+						tile.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								if (e.getActionCommand() == "base") {
+									System.out.println("clicked base");
+								}
+							}
+						});
+						this.upperPanel.add(tile);
+						System.out.println("Added tile of type: " + typeOfTile.toString()
+						+ " to position " + i + " , " + j);
+					break;
+					case CHARACTER_TYPE_3:
+						tile.setIcon(this.charIcon3);
+						tile.setActionCommand("base");
+						tile.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								if (e.getActionCommand() == "base") {
+									System.out.println("clicked base");
+								}
+							}
+						});
+						this.upperPanel.add(tile);
+						System.out.println("Added tile of type: " + typeOfTile.toString()
+						+ " to position " + i + " , " + j);
+					break;
 					default:
-						break;
-					// tile.setIcon(baseIcon);
-					// tile.setActionCommand("base");
-					// tile.addActionListener(new ActionListener() {
-					// 	@Override
-					// 	public void actionPerformed(ActionEvent e) {
-					// 		if (e.getActionCommand() == "base") {
-					// 			System.out.println("clicked base");
-					// 		}
-					// 	}
-					// });
+							// Position[][] positions = this.board.getPositions();
+							// if(positions[i][j].getCharacter() != null) {
+								// tile.setIcon(this.char1Icon);
+								// tile.setActionCommand("char 1");
+								// tile.addActionListener(new ActionListener() {
+									// @Override
+									// public void actionPerformed(ActionEvent e) {
+										// if (e.getActionCommand() == "char 1") {
+											// System.out.println("clicked char 1");
+										// }
+									// }
+								// });
+							// }
+							System.out.println("Default Case");
+							System.out.println("Added tile of type: " + typeOfTile.toString()
+							+ " to position " + i + " , " + j);
+					break;
 				}
 			}
 		}
-
+		
 		return null;
 	}
 
+	private void updatePosition() {
+
+	}
+	
 	private void testGenerateTiles() {		
 		JButton firstTile = new JButton();
 		firstTile.setPreferredSize(new Dimension(15, 15));
@@ -256,9 +365,9 @@ public class GUIBoard extends JFrame {
 				}
 			}
 		});
-		this.panel.add(firstTile);
+		this.upperPanel.add(firstTile);
 
-		// this.panel.add(firstTile).setLocation(0, 0);
+		// this.upperPanel.add(firstTile).setLocation(0, 0);
 		// firstTile.setBounds(0, 0, 15, 15);
 		// firstTile.setVisible(true);
 
@@ -278,14 +387,29 @@ public class GUIBoard extends JFrame {
 				}
 			}
 		});
-		this.panel.add(secondTile);
+		this.upperPanel.add(secondTile);
 		// secondTile.setBounds(0, 0, 15, 15);
 		// secondTile.setVisible(true);
 
 	}
 
 	private void setButtons() {
-		JButton changeTurnButton = setChangeTurnButton();
+		JButton sendPlay = new JButton("Send play");
+		sendPlay.setPreferredSize(new Dimension(40, 30));
+		sendPlay.setContentAreaFilled(true);
+		sendPlay.setBackground(Color.GRAY);
+		sendPlay.setActionCommand("LaunchAction");
+		sendPlay.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getActionCommand() == "LaunchAction") {
+					System.out.println("LaunchAction button clicked");
+				}
+			}
+		});
+		this.lowerPanel.add(sendPlay, BorderLayout.EAST);
+
+		// JButton changeTurnButton = setChangeTurnButton();
 	}
 
 	private JButton setChangeTurnButton() {

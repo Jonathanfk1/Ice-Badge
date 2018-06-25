@@ -76,6 +76,10 @@ public class ActorNetGames implements OuvidorProxy {
 		LaunchAction launchAction = (LaunchAction) jogada;
 		this.control.receiveLaunchedAction(launchAction.getLaunchAction());
 
+		// if (launchAction.getLaunchAction().getListOfCharacters() != null) {
+		// 	control.getOpponentsCharacters(launchAction.getLaunchAction().getListOfCharacters());
+		// }
+
 		isMyTurn = true;
 	}
 
@@ -89,8 +93,8 @@ public class ActorNetGames implements OuvidorProxy {
 		JOptionPane.showMessageDialog(this.control.getCurrentFrame(), "Não foi possível iniciar a partida");
 	}
 
-	public String getOpponentName() {
-		String name = "";
+	public String askForOpponentName() {
+		String name = "DefaultOpponentName";
 
 		if(isMyTurn) { 
 			name = proxy_.obterNomeAdversario(2);

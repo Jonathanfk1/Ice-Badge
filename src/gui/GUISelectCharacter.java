@@ -39,7 +39,7 @@ public class GUISelectCharacter extends JFrame {
 	}
 
 	private void setStartButton() {
-		this.startGameButton = new JButton("Start Game");
+		this.startGameButton = new JButton("Begin Game");
 		this.startGameButton.setVisible(false);
 		this.add(this.startGameButton);
 		buttonsGbc.gridy++;
@@ -47,7 +47,7 @@ public class GUISelectCharacter extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (e.getActionCommand() == "Start Game");
+				if (e.getActionCommand() == "Begin Game");
 					control.sendStart();
 			}
 		});
