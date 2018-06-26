@@ -3,8 +3,9 @@ package game;
 import java.util.List;
 
 import board.Position;
+import br.ufsc.inf.leobr.cliente.Jogada;
 
-public class Action {
+public class Action implements Jogada {
 	protected Position selectedPosition;
 	protected Position finalPosition;
 	protected TypeAction type;

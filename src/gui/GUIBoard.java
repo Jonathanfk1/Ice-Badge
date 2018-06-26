@@ -1,44 +1,29 @@
 package gui;
 
 import game.Control;
-import board.Position;
 import board.TypeTile;
 import board.Board;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.LayoutManager;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Dimension2D;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
-import java.util.List;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-import actors.ActorPlayer;
  
 public class GUIBoard extends JFrame {
+
+	private static final long serialVersionUID = -4942685444367223974L;
 
 	private Control control;
 	private JPanel lowerPanel;
 	private JPanel upperPanel;
-	private TypeTile[][] map;
 	private Board board;
 	private ImageIcon grassIcon;
 	private ImageIcon baseIcon;
@@ -86,7 +71,7 @@ public class GUIBoard extends JFrame {
 	public void setPanel() {
 		this.upperPanel = new JPanel();
 		// this.upperPanel.setSize(new Dimension(500, 500));
-		this.upperPanel.setBackground(Color.GREEN);
+		this.upperPanel.setBackground(new Color(45, 175, 49));
         this.upperPanel.setLayout(new GridLayout(this.board.getRowSize(), this.board.getColumnSize()));
 		this.upperPanel.setPreferredSize(new Dimension(500, 500));
 
@@ -95,20 +80,10 @@ public class GUIBoard extends JFrame {
 		this.lowerPanel.setBackground(Color.PINK);
         this.lowerPanel.setLayout(new GridLayout(1, 3));
 		this.lowerPanel.setPreferredSize(new Dimension(200, 60));
+		
+		this.setIconImages();
 	}
 	
-	public void updateMap() {
-		this.map = this.board.mapPositions();
-	}
-
-	public void setMap(TypeTile[][] tileTypes) {
-		this.map = tileTypes;
-	}
-
-	public TypeTile[][] getMap() {
-		return this.map;
-	}
-
 	public void setIconImages() {
 		ImageIcon grassIcon = new ImageIcon("resources/grassTile.png");
 		grassIcon.setImage(grassIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
@@ -148,29 +123,16 @@ public class GUIBoard extends JFrame {
 
 	}
 
-
 	public Board setBoard() {
-		// Position[][] listOfPositions = this.board.getPositions();
-		
-		// ImageIcon icon = new ImageIcon("resources/grassTile.png");
-		// icon.setImage(icon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
-		// Board board = new Board(50, 50);
-		
-		// ImageIcon icon = new ImageIcon("resources/grassTile.png");
-		// icon.setImage(icon.getImage().getScaledInstance(35, 35, java.awt.Image.SCALE_SMOOTH));
 
-		
-		setIconImages();
-		updateMap();
+		// this.updateMap();
 
 		for (int i = 0; i < board.getRowSize(); i++) {
 			for (int j = 0; j < board.getColumnSize(); j++) {
 				JButton tile = new JButton();
 				tile.setPreferredSize(new Dimension(15, 15));
 				tile.setContentAreaFilled(false);
-				// secondTile.setLayout(null);localhost
-				TypeTile typeOfTile = this.map[i][j];
-				switch(typeOfTile) {
+				switch(control.getGame().getBoard().getPositions()[i][j].getTile()) {
 					case GRASS:
 						tile.setIcon(this.grassIcon);
 						tile.setActionCommand("grass");
@@ -183,7 +145,7 @@ public class GUIBoard extends JFrame {
 							}
 						});
 						this.upperPanel.add(tile);
-						System.out.println("Added tile of type: " + typeOfTile.toString()
+						System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
 						+ " to position " + i + " , " + j);
 						break;
 					case WATER:
@@ -198,7 +160,7 @@ public class GUIBoard extends JFrame {
 							}
 						});
 						this.upperPanel.add(tile);
-						System.out.println("Added tile of type: " + typeOfTile.toString()
+						System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
 						+ " to position " + i + " , " + j);
 						break;
 					case MOUNTAIN:
@@ -213,7 +175,7 @@ public class GUIBoard extends JFrame {
 							}
 						});
 						this.upperPanel.add(tile);
-						System.out.println("Added tile of type: " + typeOfTile.toString()
+						System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
 						+ " to position " + i + " , " + j);
 						break;
 					case ROCK:
@@ -228,7 +190,7 @@ public class GUIBoard extends JFrame {
 							}
 						});
 						this.upperPanel.add(tile);
-						System.out.println("Added tile of type: " + typeOfTile.toString()
+						System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
 						+ " to position " + i + " , " + j);
 						break;
 					case TREE:
@@ -243,7 +205,7 @@ public class GUIBoard extends JFrame {
 							}
 						});
 						this.upperPanel.add(tile);
-						System.out.println("Added tile of type: " + typeOfTile.toString()
+						System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
 						+ " to position " + i + " , " + j);
 					break;
 					case MAIN_BASE_OPPONENT:
@@ -258,7 +220,7 @@ public class GUIBoard extends JFrame {
 								}
 							});
 							this.upperPanel.add(tile);
-							System.out.println("Added tile of type: " + typeOfTile.toString()
+							System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
 							+ " to position " + i + " , " + j);
 					break;
 					case MAIN_BASE_SELF:
@@ -273,7 +235,7 @@ public class GUIBoard extends JFrame {
 								}
 							});
 							this.upperPanel.add(tile);
-							System.out.println("Added tile of type: " + typeOfTile.toString()
+							System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
 							+ " to position " + i + " , " + j);
 					break;
 					case CHARACTER_TYPE_1:
@@ -288,7 +250,7 @@ public class GUIBoard extends JFrame {
 							}
 						});
 						this.upperPanel.add(tile);
-						System.out.println("Added tile of type: " + typeOfTile.toString()
+						System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
 						+ " to position " + i + " , " + j);
 					break;
 					case CHARACTER_TYPE_2:
@@ -303,7 +265,7 @@ public class GUIBoard extends JFrame {
 							}
 						});
 						this.upperPanel.add(tile);
-						System.out.println("Added tile of type: " + typeOfTile.toString()
+						System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
 						+ " to position " + i + " , " + j);
 					break;
 					case CHARACTER_TYPE_3:
@@ -318,7 +280,7 @@ public class GUIBoard extends JFrame {
 							}
 						});
 						this.upperPanel.add(tile);
-						System.out.println("Added tile of type: " + typeOfTile.toString()
+						System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
 						+ " to position " + i + " , " + j);
 					break;
 					default:
@@ -336,7 +298,7 @@ public class GUIBoard extends JFrame {
 								// });
 							// }
 							System.out.println("Default Case");
-							System.out.println("Added tile of type: " + typeOfTile.toString()
+							System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
 							+ " to position " + i + " , " + j);
 					break;
 				}
@@ -347,49 +309,6 @@ public class GUIBoard extends JFrame {
 	}
 
 	private void updatePosition() {
-
-	}
-	
-	private void testGenerateTiles() {		
-		JButton firstTile = new JButton();
-		firstTile.setPreferredSize(new Dimension(15, 15));
-		// firstTile.setIcon(icon);
-		firstTile.setContentAreaFilled(false);
-		// firstTile.setLayout(null);
-		firstTile.setActionCommand("grass");
-		firstTile.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (e.getActionCommand() == "grass") {
-					System.out.println("clicked grass");
-				}
-			}
-		});
-		this.upperPanel.add(firstTile);
-
-		// this.upperPanel.add(firstTile).setLocation(0, 0);
-		// firstTile.setBounds(0, 0, 15, 15);
-		// firstTile.setVisible(true);
-
-
-		
-		JButton secondTile = new JButton();
-		secondTile.setPreferredSize(new Dimension(15, 15));
-		// secondTile.setIcon(icon);
-		secondTile.setContentAreaFilled(false);
-		// secondTile.setLayout(null);
-		secondTile.setActionCommand("grass");
-		secondTile.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (e.getActionCommand() == "grass") {
-					System.out.println("clicked grass");
-				}
-			}
-		});
-		this.upperPanel.add(secondTile);
-		// secondTile.setBounds(0, 0, 15, 15);
-		// secondTile.setVisible(true);
 
 	}
 
@@ -408,12 +327,6 @@ public class GUIBoard extends JFrame {
 			}
 		});
 		this.lowerPanel.add(sendPlay, BorderLayout.EAST);
-
-		// JButton changeTurnButton = setChangeTurnButton();
-	}
-
-	private JButton setChangeTurnButton() {
-		return new JButton();
 	}
 
 	public void tellTurn(boolean turn) { 
@@ -422,9 +335,6 @@ public class GUIBoard extends JFrame {
 		} else {
 			JOptionPane.showMessageDialog(this, "Wait for opponent to move.");
 		}
-	}
-
-	public void tellItsTurn() {
 	}
 
 }

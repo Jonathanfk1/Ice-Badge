@@ -4,17 +4,17 @@ import gui.GUIMainMenu;
 import gui.GUISelectCharacter;
 import gui.GUIBoard;
 import netgames.ActorNetGames;
+import netgames.MessageType;
+import netgames.Message;
 
-import java.awt.dnd.DragSourceAdapter;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.swing.JFrame;
 
 import actors.ActorPlayer;
+import board.Board;
+import board.BoardSide;
 import board.Position;
 
 public class Control {
@@ -25,36 +25,69 @@ public class Control {
 	protected ActorNetGames actorNetGames;
 	protected ActorPlayer actorPlayer;
 	protected Game game;
-	protected boolean connected;
+	protected boolean isConnected;
 	protected boolean isFirstPlayer;
 	protected List<Character> selectedCharacters;
-	protected int charactersLeft;
+	// protected int charactersLeft;
 	protected GUIMainMenu guiMainMenu;
 	protected GUIBoard guiBoard;
 	protected GUISelectCharacter guiSelectCharacter;
 	protected JFrame currentMenu;
+	protected List<Character> opponentsCharacters;
+	protected boolean isRoomStarted;
+	protected boolean isReadyToStart;
+	protected Integer position;
 
 	public Control() {
 		this.actorPlayer = new ActorPlayer(this);
 		this.actorNetGames = new ActorNetGames(this);
-		this.connected = false;
-		this.charactersLeft = this.NUMBER_OF_CHARACTERS;
-		this.selectedCharacters = new ArrayList<Character>();
+		this.isConnected = false;
+		this.selectedCharacters = new ArrayList<>();
+		this.isReadyToStart = false;
 		this.game = new Game(this);
 	}
 
-	public void runInitialMenu() {
+	public void runMainMenu() {
 		this.guiMainMenu = new GUIMainMenu(this);
 		currentMenu = guiMainMenu;
 	}
 
 	public void disconnect() {
 		this.actorNetGames.disconnect();
+		this.setIsRoomStarted(false);
+		this.setIsConnected(false);
+		this.selectedCharacters.clear();
+		this.guiSelectCharacter.show(false);
+	}
+
+	public void updateFrame(JFrame frame) {
+		frame.invalidate();
+		frame.validate();
+		frame.repaint();
 	}
 	
-
-	public void delegateStartGameOnlineToNetGames() {
-		this.actorNetGames.startGameOnline();
+	public void askToStartGame() {
+		if (!this.isRoomStarted) {	
+			if(this.isConnected) {
+				this.actorNetGames.sendStart();
+				// if (!this.guiSelectCharacter.isEnabled()) {
+				if (!this.isRoomStarted) {
+					if (this.guiSelectCharacter == null) {
+						this.openSelectCharacterMenu();
+					} else {
+						this.guiSelectCharacter.show(true);
+						this.updateFrame(this.guiSelectCharacter);
+					}
+				}
+				// }
+			} else {
+				this.guiMainMenu.informNotConnected();
+			}
+		} else if (this.isRoomStarted && this.selectedCharacters.isEmpty()) {
+			this.openSelectCharacterMenu();
+		} else { 
+			this.guiMainMenu.informRoomAlreadyStarted();
+		}
 	}
 
 	public void startPlayOverNet(boolean startsPlaying) {
@@ -66,14 +99,15 @@ public class Control {
 	}
 	
 	public void createGame(boolean iStartPlaying) {
-		if(connected) {
+		this.game.getPlayer().setName(this.guiMainMenu.getPlayerName());
+		if(isConnected) {
 			this.game.setOpponentName(findOpponentName());
 			// this.game.setOpponentsCharacters();
 		} else {
 			this.game.setOpponentName("Offline Player");
 		}
 		// this.game.openSelectCharacterMenu();
-		this.game.addSelectedCharacters(selectedCharacters);
+		// this.game.getOpponent().setCharactersList(this.opponentsCharacters);
 		this.game.createBoard(this.game, DEFAULT_BOARD_SQUARE_SIZE, DEFAULT_BOARD_SQUARE_SIZE);
 		// this.game.getBoard().setMainBases(iStartPlaying);
 		// this.game.setBasesForPlayers(iStartPlaying);
@@ -83,11 +117,11 @@ public class Control {
 	}
 
 	public void startGame() {
-		if (actorNetGames.isMyTurn) {
+		if (actorNetGames.getIsTurn()) {
 			this.actorPlayer.setTurn(true);
 		}
 	}
-
+	
 	public Action changeTurn() {
 		if (this.actorPlayer.isTurn()) {
 			return this.game.changeTurn();
@@ -120,16 +154,14 @@ public class Control {
 	public void selectCharacter(TypeCharacter type) {
 
 		// SELECT CHARACTER LOOP
-		if (this.selectedCharacters.size() < 6) {
+		if (this.selectedCharacters.size() < NUMBER_OF_CHARACTERS) {
 			this.selectedCharacters.add(this.game.selectCharacter(type));
 			this.guiSelectCharacter.updateCharactersCount(selectedCharacters.size());
-			if (this.selectedCharacters.size() == 6) {
+			if (this.selectedCharacters.size() == NUMBER_OF_CHARACTERS) {
 				System.out.println("Can't add more characters.");
-				this.guiSelectCharacter.showStartButton(true);	
+				this.guiSelectCharacter.showReadyButton(true);	
 			}
-		} else {
-
-		}
+		} 
 	}
 
 	public Game getGame() {
@@ -141,29 +173,22 @@ public class Control {
 	}
 
 	public void receiveLaunchedAction(Action launchAction) {
-		if (launchAction.getListOfCharacters() != null) {
-			this.game.addOpponentsCharacters(launchAction.getListOfCharacters());
-		} else {
-			switch(launchAction.getType()) {
-				case SETTLE_TEAM:
+		switch(launchAction.getType()) {
+			case ATTACK:
 
-				break;
-				case ATTACK:
+			break;
+			case MOVE:
 
-				break;
-				case MOVE:
+			break;
+			case CHANGE_TURN:
 
-				break;
-				case CHANGE_TURN:
+			break;
+			case SELECT_CHARACTER:
 
-				break;
-				case SELECT_CHARACTER:
+			break;
+			default:
 
-				break;
-				default:
-
-				break;
-			}
+			break;
 		}
 	}
 
@@ -172,19 +197,11 @@ public class Control {
 	}
 
 	public void connectToNetGames() {
-		this.connected = this.actorNetGames.connect(this.guiMainMenu.getConnectionIp(), this.guiMainMenu.getConnectionName());
+		this.setIsConnected(this.actorNetGames.connect(this.guiMainMenu.getConnectionIp(), this.guiMainMenu.getConnectionName()));
 	}
 
 	public ActorNetGames getActorNetGames() {
-		return actorNetGames;
-	}
-
-	public void sendStart() {
-		if(connected) {
-			this.actorNetGames.startGameOnline();
-		} else {
-			this.guiMainMenu.informNotConnected();
-		}
+		return this.actorNetGames;
 	}
 
 	public void tellTurn(boolean turn) {
@@ -222,15 +239,61 @@ public class Control {
 		if (selectedCharacters.size() > 0) {
 			selectedCharacters.remove(selectedCharacters.size()-1);
 			this.guiSelectCharacter.updateCharactersCount(selectedCharacters.size());
-			this.guiSelectCharacter.showStartButton(selectedCharacters.size() == 6);
+			this.guiSelectCharacter.showReadyButton(selectedCharacters.size() == NUMBER_OF_CHARACTERS);
+			this.guiSelectCharacter.showStartButton(selectedCharacters.size() == NUMBER_OF_CHARACTERS);
 		} else {
 			this.guiSelectCharacter.tellSelectionListIsEmpty();
 			System.out.println("List of selected characters is empty.");
 		}
 	}
 
-	public Object getSelectedCharacters() {
+	public List<Character> getSelectedCharacters() {
 		return selectedCharacters;
+	}
+
+	public void setOpponentsCharacters(List<Character> listOfCharacters) {
+		this.opponentsCharacters = listOfCharacters;
+	}
+
+	public void warnPlayerNotReady() {
+		this.guiMainMenu.warnConnectionTrial();
+	}
+
+	public void toggleIsReadyToStart() {
+		this.actorNetGames.setIsReadyToStart(!this.actorNetGames.getIsReadyToStart());
+	}
+
+	public void listOfCharactersReceived() {
+		this.guiMainMenu.listOfCharactersReceived();
+	}
+
+	public void setIsConnected(boolean connected) {
+		this.isConnected = connected;
+		this.guiMainMenu.setConnectedText(this.isConnected);
+		this.guiMainMenu.update(this.guiMainMenu.getGraphics());
+	}
+
+	public void setIsRoomStarted(boolean roomStarted) {
+		this.isRoomStarted = roomStarted;
+		this.guiMainMenu.setRoomStartedText(this.isRoomStarted);
+		this.guiMainMenu.update(this.guiMainMenu.getGraphics());
+	}
+
+	public void sendStartGameMessage() {
+		Message message = new Message(MessageType.START_GAME, this.getSelectedCharacters());
+		this.actorNetGames.sendMessage(message);
+	}
+
+	public BoardSide askForBoardSide() {
+		return this.guiMainMenu.askForBoardSide();
+	}
+
+	public void setPosition(Integer posicao) {
+		this.position = posicao;
+	}
+
+	public boolean boardSidesSet() {
+		return (this.getGame().getPlayer().getBoardSide() != null);
 	}
 
 	// public void notPossibleToConnectError(NaoPossivelConectarException e) {

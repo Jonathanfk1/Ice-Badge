@@ -1,11 +1,8 @@
 package gui;
 
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,7 +10,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
+import board.BoardSide;
 import game.Control;
 
 public class GUIMainMenu extends JFrame {
@@ -22,6 +22,9 @@ public class GUIMainMenu extends JFrame {
 	protected JFrame frame_;
 	protected JPanel panel_;
 	protected Control control_;
+	protected JTextArea connectedText;
+	protected JTextArea roomStartedText;
+	protected String playerName;
 
 	public GUIMainMenu(Control control) {
 		this.control_ = control;
@@ -29,6 +32,19 @@ public class GUIMainMenu extends JFrame {
 
 		this.setFrame();
 		this.setButtons();
+		this.setLabels();
+	}
+
+	private void setLabels() {
+		this.connectedText = new JTextArea("Connected");
+		// buttonsGbc.gridx++;
+		this.connectedText.setVisible(false);
+		this.panel_.add(connectedText);
+
+		this.roomStartedText = new JTextArea("Room Started");
+		// buttonsGbc.gridx++;
+		this.roomStartedText.setVisible(false);
+		this.panel_.add(roomStartedText); 
 	}
 
 	public void setFrame() {
@@ -36,7 +52,7 @@ public class GUIMainMenu extends JFrame {
 		this.setLayout(new GridBagLayout());
 		this.add(panel_, gbc);
 		this.setVisible(true);
-		this.setSize(new Dimension(500, 300));
+		this.setSize(new Dimension(700, 300));
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
@@ -51,13 +67,9 @@ public class GUIMainMenu extends JFrame {
                 "localhost");
 		return ip;
 	}
-
-	public void informNotConnected() {
-		JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "You're not connected, can't start game.", "Not connected", JOptionPane.ERROR_MESSAGE);
-	}
 	
 	public String getConnectionName() {
-		String name = (String)JOptionPane.showInputDialog(
+		this.playerName = (String)JOptionPane.showInputDialog(
                 this,
                 "Enter your name",
                 "Enter info",
@@ -65,7 +77,11 @@ public class GUIMainMenu extends JFrame {
                 null,
                 null,
                 "");
-		return name;
+		return this.playerName;
+	}
+
+	public void informNotConnected() {
+		JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "You're not connected, can't start game.", "Not connected", JOptionPane.ERROR_MESSAGE);
 	}
 
 	public void setButtons() {
@@ -108,14 +124,7 @@ public class GUIMainMenu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand() == "START GAME") {
-					
-					// control_.startGame();
-					
-					control_.openSelectCharacterMenu();
-
-					// new GUIBoard(control_);
-					
-					// control_.delegateCreateNewGameToActorPlayer(1);
+					control_.askToStartGame();
 				}
 
 			}
@@ -138,6 +147,50 @@ public class GUIMainMenu extends JFrame {
 		});
 		this.panel_.add(exit, gbc);
 
+	}
+
+	public void warnConnectionTrial() {
+		JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "One of the players is not ready to start.", "Start Game received", JOptionPane.PLAIN_MESSAGE);
+	}
+
+	public void listOfCharactersReceived() {
+		JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "List of characters received.", "Chars received", JOptionPane.PLAIN_MESSAGE);
+	}
+
+	public void setConnectedText(boolean isConnected) {
+		this.connectedText.setVisible(isConnected);
+		SwingUtilities.updateComponentTreeUI(this);
+	}
+
+	public void setRoomStartedText(boolean isRoomStarted) {
+		this.roomStartedText.setVisible(isRoomStarted);
+		SwingUtilities.updateComponentTreeUI(this);
+	}
+
+	public void informRoomAlreadyStarted() {
+		JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "Room is already started.", "Room already started", JOptionPane.PLAIN_MESSAGE);
+	}
+
+	public BoardSide askForBoardSide() {
+			Object[] options = {"UP",
+			"DOWN"};
+			int n = JOptionPane.showOptionDialog(this,
+			"Chose your side of the board",
+			"Choose side",
+			JOptionPane.YES_NO_CANCEL_OPTION,
+			JOptionPane.QUESTION_MESSAGE,
+			null,
+			options,
+			options[1]);
+			if (n == 0) {
+				return BoardSide.UP;
+			} else {
+				return BoardSide.DOWN;
+			}
+	}
+
+	public String getPlayerName() {
+		return this.playerName;
 	}
 
 }

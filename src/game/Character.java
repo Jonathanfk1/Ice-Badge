@@ -1,8 +1,10 @@
 package game;
 
 import board.Position;
+import br.ufsc.inf.leobr.cliente.Jogada;
+import br.ufsc.inf.leobr.servidor.Jogo;
 
-public class Character {
+public class Character implements Jogada {
 
 	protected int life_;
 	protected int powerAttack_;
@@ -14,6 +16,7 @@ public class Character {
 	private Position position;
 
 	public Character(int life, int powerAttack, int rangeAttack, int rangeMove, TypeCharacter type) {
+		super();
 		this.life_ = life;
 		this.powerAttack_ = powerAttack;
 		this.rangeAttack_ = rangeAttack;
@@ -21,7 +24,7 @@ public class Character {
 		this.type_ = type;
 		this.moved_ = false;
 		this.attacked_ = false;
-		this.position = new Position(0, 0, null);
+		this.position = new Position(0, 0, this);
 	}
 	
 	public int getLife() {
@@ -42,6 +45,10 @@ public class Character {
 
 	public Position getPosition() {
 		return this.position;
+	}
+
+	public void setPosition(Position position) {
+		this.position = position;
 	}
 
 }

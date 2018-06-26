@@ -1,7 +1,8 @@
 package board;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
 
 import game.Character;
 import game.Game;
@@ -17,22 +18,47 @@ public class Board {
 	protected Game game;
 	protected Position opponentBase;
 	protected Position myBase;
+	protected BoardSide playerBoardSide;
+	protected BoardSide opponentBoardSide;
+	protected List<Character> playerListOfCharacters;
+	protected List<Character> opponentListOfCharacters;
 
-	public Board(Game game, int rowSize, int columnSize) {
+	public Board(Game game, int rowSize, int columnSize, BoardSide chosenBoardSide) {
 		this.game = game;
 		this.game.setBoard(this);
 		this.rowSize = rowSize;
 		this.columnSize = columnSize;
 		this.positions = new Position[rowSize][columnSize];
+		this.playerBoardSide = chosenBoardSide;
+		this.playerListOfCharacters = this.game.getPlayer().getCharactersList();
+		this.opponentListOfCharacters = this.game.getOpponent().getCharactersList();;
+		this.setBoardSides();
+		this.boardSetup();
+	}
+
+	public void setBoardSides() {
+		if (this.playerBoardSide == BoardSide.UP) {
+			this.opponentBoardSide = BoardSide.DOWN;
+		} else {
+			this.opponentBoardSide = BoardSide.UP;
+		}
 	}
 
 	public void boardSetup() {
-		this.setBasesAndCharacters(this.game.getOpponent().isTurn());
+		this.setBasesOnBoard(this.playerBoardSide);
+		this.setPlayerCharactersOnBoard(this.game.getPlayer());
+		// this.game.setOpponentsCharacters(this.opponentListOfCharacters);
+		this.setPlayerCharactersOnBoard(this.game.getOpponent());
+		this.generateBases();
+		this.setCharactersOnBoard(this.playerListOfCharacters);
+		this.setCharactersOnBoard(this.opponentListOfCharacters);
+		this.generateBoardObjects();
+		// this.generateBoardGrass();
+	}
+
+	public void setBases() {
 		this.opponentBase = this.game.getOpponent().getMainBase();
 		this.myBase = this.game.getPlayer().getMainBase();
-		this.generateBoardObjects();
-		this.generateBases();
-		// this.generateBoardGrass();
 	}
 
 	private void generateBases() {
@@ -97,37 +123,92 @@ public class Board {
 		}
 	}
 
-	public void setBasesAndCharacters(boolean isOpponentTurn) {
-		if (isOpponentTurn) {
-			this.opponentBase = new Position(0, 7, TypeTile.MAIN_BASE_OPPONENT);
-			this.myBase = new Position(15, 8, TypeTile.MAIN_BASE_SELF);
-			this.game.setBasesForPlayers(isOpponentTurn);
-			this.setCharactersOnBoard(isOpponentTurn);
-		} else {
-			this.opponentBase = new Position(15, 8, TypeTile.MAIN_BASE_OPPONENT);
-			this.myBase = new Position(0, 7, TypeTile.MAIN_BASE_SELF);
-			this.game.setBasesForPlayers(isOpponentTurn);
-			this.setCharactersOnBoard(isOpponentTurn);
+
+
+	public void setBasesOnBoard(BoardSide chosenBoardSide) {
+		switch (chosenBoardSide) {
+			case UP:
+				this.opponentBase = new Position(0, 7, TypeTile.MAIN_BASE_OPPONENT);
+				this.myBase = new Position(15, 8, TypeTile.MAIN_BASE_SELF);
+				this.opponentBoardSide = BoardSide.DOWN;
+			break;
+			case DOWN:
+				this.opponentBase = new Position(15, 8, TypeTile.MAIN_BASE_OPPONENT);
+				this.myBase = new Position(0, 7, TypeTile.MAIN_BASE_SELF);
+				this.opponentBoardSide = BoardSide.UP;
+			break;
+			default:
+			break;
 		}
+		this.game.setBasesForPlayers();
 	}
 
-	public void setCharactersOnBoard(boolean iStartPlaying) {
-		if (iStartPlaying) {
-			int i = 4;
-			for (Character character : this.game.getPlayer().getCharactersList()) {
-				this.positions[15][i].character = character;
-				this.positions[15][i].isOccupied = true;
-				i = i + 5;
-			}
-		} else {
-			int i = 4;
-			for (Character character : this.game.getPlayer().getCharactersList()) {
-				this.positions[0][i].character = character;
-				this.positions[0][i].isOccupied = true;
-				i = i + 5;
-			}
+	public void setPlayerCharactersOnBoard(Player player) {
+		switch (player.getBoardSide()) {
+			case UP:
+				Character char1 = player.getCharactersList().get(0);
+				char1.setPosition(new Position(15, 1, char1));
+				positions[char1.getPosition().getX()][char1.getPosition().getY()] = char1.getPosition();
+
+				Character char2 = player.getCharactersList().get(1);
+				char2.setPosition(new Position(15, 3, char2));
+				positions[char1.getPosition().getX()][char1.getPosition().getY()] = char2.getPosition();
+
+				Character char3 = player.getCharactersList().get(2);
+				char3.setPosition(new Position(15, 6, char3));
+				positions[char1.getPosition().getX()][char1.getPosition().getY()] = char3.getPosition();
+
+				Character char4 = player.getCharactersList().get(3);
+				char4.setPosition(new Position(15, 10, char4));
+				positions[char1.getPosition().getX()][char1.getPosition().getY()] = char4.getPosition();
+
+				Character char5 = player.getCharactersList().get(4);
+				char5.setPosition(new Position(15, 12, char5));
+				positions[char1.getPosition().getX()][char1.getPosition().getY()] = char5.getPosition();
+				
+				Character char6 = player.getCharactersList().get(5);
+				char6.setPosition(new Position(15, 14, char6));
+				positions[char1.getPosition().getX()][char1.getPosition().getY()] = char6.getPosition();
+
+			// this.
+			// 	int j = 3;
+			// 	for (int i = 0; i < this.game.getPlayer().getCharactersList().size(); i++) {
+			// 		if (this.positions[15][j].isObstacle || this.positions[15][j].isOccupied) {
+			// 		}
+			// 	}
+				
+			break;
+			case DOWN:
+				Character charA = player.getCharactersList().get(0);
+				charA.setPosition(new Position(0, 1, charA));
+				positions[charA.getPosition().getX()][charA.getPosition().getY()] = charA.getPosition();
+
+				Character charB = player.getCharactersList().get(0);
+				charB.setPosition(new Position(0, 3, charA));
+				positions[charB.getPosition().getX()][charB.getPosition().getY()] = charB.getPosition();
+
+				Character charC = player.getCharactersList().get(0);
+				charC.setPosition(new Position(0, 5, charC));
+				positions[charC.getPosition().getX()][charC.getPosition().getY()] = charC.getPosition();
+
+				Character charD = player.getCharactersList().get(0);
+				charD.setPosition(new Position(0, 9, charD));
+				positions[charD.getPosition().getX()][charD.getPosition().getY()] = charD.getPosition();
+
+				Character charE = player.getCharactersList().get(0);
+				charE.setPosition(new Position(0, 11, charE));
+				positions[charE.getPosition().getX()][charE.getPosition().getY()] = charE.getPosition();
+
+				Character charF = player.getCharactersList().get(0);
+				charF.setPosition(new Position(0, 13, charF));
+				positions[charF.getPosition().getX()][charF.getPosition().getY()] = charF.getPosition();
+			break;
+			default:
+			break;
 		}
+
 	}
+
 	public Position getPosition(int x, int y) {
 		if (x <= rowSize && y <= columnSize) {
 			return this.positions[x][y];
@@ -187,7 +268,7 @@ public class Board {
 		return this.columnSize;
 	}
 
-	public void setOpponentsCharactersOnBoard(List<Character> listOfCharacters) {
+	public void setCharactersOnBoard(List<Character> listOfCharacters) {
 		for (Character character : listOfCharacters) {
 			this.positions[character.getPosition().getX()][character.getPosition().getY()] = character.getPosition();
 			this.positions[character.getPosition().getX()][character.getPosition().getY()] = character.getPosition();

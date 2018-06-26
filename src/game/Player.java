@@ -3,6 +3,7 @@ package game;
 import java.util.ArrayList;
 import java.util.List;
 
+import board.BoardSide;
 import board.Position;
 
 public class Player {
@@ -11,44 +12,21 @@ public class Player {
 	protected boolean turn;
 	protected Position selectedPosition;
 	protected Position mainBase;
-	protected ArrayList<Character> listCharacter;
+	protected List<Character> listCharacter;
+	private BoardSide boardSide;
 
 	public Player(String name) {
 		this.name = name;
 		// this.mainBase = new Position(0, 0, null);
-		this.listCharacter = new ArrayList<>();
 		this.turn = false;
+		this.listCharacter = new ArrayList<>();
 	}
 
 	public Player() {
-		this.listCharacter = new ArrayList<>();
 		// this.mainBase = new Position(0, 0, null);
 		this.turn = false;
 		this.name = "Opponent";
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public boolean isTurn() {
-		return this.turn;
-	}
-
-	public void setTurn(boolean turn) {
-		this.turn = turn;
-	}
-
-	public void setSelectedPosition(Position position) {
-		this.selectedPosition = position;
-	}
-
-	public Position getSelectedPosition() {
-		return this.selectedPosition;
+		this.listCharacter = new ArrayList<>();
 	}
 
 	public void addCharacter(Character character) {
@@ -58,10 +36,6 @@ public class Player {
 
 	public void removeCharacter(Character character) {
 		this.listCharacter.remove(character);
-	}
-
-	public ArrayList<Character> getCharactersList() {
-		return this.listCharacter;
 	}
 
 	public boolean checkPlayerCharacter(Character character) {
@@ -94,4 +68,45 @@ public class Player {
 			addCharacter(character);
 		}
 	}
+
+	public List<Character> getCharactersList() {
+		return this.listCharacter;
+	}
+
+	public void setCharactersList(List<Character> charactersList) {
+		this.listCharacter = charactersList;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public boolean isTurn() {
+		return this.turn;
+	}
+
+	public void setTurn(boolean turn) {
+		this.turn = turn;
+	}
+
+	public void setSelectedPosition(Position position) {
+		this.selectedPosition = position;
+	}
+
+	public Position getSelectedPosition() {
+		return this.selectedPosition;
+	}
+
+	public void setBoardSide(BoardSide boardSide) {
+		this.boardSide = boardSide;
+	}
+
+	public BoardSide getBoardSide() {
+		return this.boardSide;
+	}
+
 }

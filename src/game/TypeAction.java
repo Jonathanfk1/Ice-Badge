@@ -1,9 +1,10 @@
 package game;
 
-public enum TypeAction {
+import br.ufsc.inf.leobr.cliente.Jogada;
+
+public enum TypeAction implements Jogada  {
 	ATTACK,
 	MOVE,
 	CHANGE_TURN,
-	SELECT_CHARACTER,
-	SETTLE_TEAM,
+	SELECT_CHARACTER;
 }

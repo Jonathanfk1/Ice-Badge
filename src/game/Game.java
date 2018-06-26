@@ -4,8 +4,8 @@ import board.Position;
 
 import java.util.List;
 
-import actors.ActorPlayer;
 import board.Board;
+import board.BoardSide;
 
 public class Game {
 
@@ -24,11 +24,9 @@ public class Game {
 		return this.board.getPosition(x, y);
 	}
 
-	public void setBasesForPlayers(boolean turn) {
-		this.player.setTurn(true);
+	public void setBasesForPlayers() {
 		this.player.setMainBase(this.board.getSelfMainBase());
 		this.opponent.setMainBase(this.board.getOpponentMainBase());
-		this.control.tellTurn(turn);
 	}
 
 	public Action selectPosition(Position clickedPosition) {
@@ -113,8 +111,7 @@ public class Game {
 	}
 
 	public void createBoard(Game game, int i, int j) {
-		this.board = new Board(game, i, j);
-		this.board.boardSetup();
+		this.board = new Board(game, i, j, this.player.getBoardSide());
 	}
 
 	public void openSelectCharacterMenu() {
@@ -125,8 +122,8 @@ public class Game {
 		this.board = board;
 	}
 
-	public void addOpponentsCharacters(List<Character> listOfCharacters) {
-		this.board.setOpponentsCharactersOnBoard(listOfCharacters);
+	public void addCharacters(List<Character> listOfCharacters) {
+		this.board.setCharactersOnBoard(listOfCharacters);
 	}
 
 	public Board getBoard() {
@@ -139,6 +136,10 @@ public class Game {
 
 	public void addSelectedCharacters(List<Character> selectedCharacters) {
 		player.addCharacters(selectedCharacters);
+	}
+
+	public void setOpponentsCharacters(List<Character> opponentListOfCharacters) {
+		this.opponent.listCharacter = opponentListOfCharacters;
 	}
 
 }

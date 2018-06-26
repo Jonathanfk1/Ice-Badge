@@ -16,8 +16,8 @@ public class ActorPlayer extends Player {
         this.control.connectToNetGames();
     }
 
-    public void askNetGamesToStartGameOnline() {
-        this.control.delegateStartGameOnlineToNetGames();
+    public void askToStartGame() {
+        this.control.askToStartGame();
     }
 
 	public void startPlayOverNet(boolean iStartPlaying) {
