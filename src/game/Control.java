@@ -13,7 +13,6 @@ import java.util.List;
 import javax.swing.JFrame;
 
 import actors.ActorPlayer;
-import board.Board;
 import board.BoardSide;
 import board.Position;
 
@@ -57,7 +56,7 @@ public class Control {
 		this.setIsRoomStarted(false);
 		this.setIsConnected(false);
 		this.selectedCharacters.clear();
-		this.guiSelectCharacter.show(false);
+		this.guiSelectCharacter.setVisible(false);
 	}
 
 	public void updateFrame(JFrame frame) {
@@ -75,7 +74,7 @@ public class Control {
 					if (this.guiSelectCharacter == null) {
 						this.openSelectCharacterMenu();
 					} else {
-						this.guiSelectCharacter.show(true);
+						this.guiSelectCharacter.setVisible(true);
 						this.updateFrame(this.guiSelectCharacter);
 					}
 				}

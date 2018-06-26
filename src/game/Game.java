@@ -5,7 +5,6 @@ import board.Position;
 import java.util.List;
 
 import board.Board;
-import board.BoardSide;
 
 public class Game {
 
@@ -13,6 +12,9 @@ public class Game {
 	protected Player player;
 	protected Player opponent;
 	protected Control control;
+	protected boolean isOngoing;
+	protected boolean isInterrupted;
+	protected boolean hasWinner;
 
 	public Game(Control control) {
 		this.opponent = new Player();

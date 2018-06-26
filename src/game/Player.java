@@ -12,6 +12,7 @@ public class Player {
 	protected boolean turn;
 	protected Position selectedPosition;
 	protected Position mainBase;
+	protected Action lastAction;
 	protected List<Character> listCharacter;
 	private BoardSide boardSide;
 

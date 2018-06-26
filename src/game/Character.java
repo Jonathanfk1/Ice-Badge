@@ -2,45 +2,47 @@ package game;
 
 import board.Position;
 import br.ufsc.inf.leobr.cliente.Jogada;
-import br.ufsc.inf.leobr.servidor.Jogo;
 
 public class Character implements Jogada {
 
-	protected int life_;
-	protected int powerAttack_;
-	protected int rangeAttack_;
-	protected int rangeMove_;
-	protected boolean moved_;
-	protected boolean attacked_;
-	protected TypeCharacter type_;
-	private Position position;
+	private static final long serialVersionUID = 6209382746370126888L;
+	protected int lifeValue;
+	protected int attackDamage;
+	protected int attackRange;
+	protected int moveRange;
+	protected boolean movedThisTurn;
+	protected boolean attackedThisTurn;
+	protected TypeCharacter type;
+	protected boolean willDoubleAttack;
+	protected boolean willCounterAttack;
+	protected Position position;
 
-	public Character(int life, int powerAttack, int rangeAttack, int rangeMove, TypeCharacter type) {
+	public Character(int lifeValue, int attackDamage, int attackRange, int moveRange, TypeCharacter type) {
 		super();
-		this.life_ = life;
-		this.powerAttack_ = powerAttack;
-		this.rangeAttack_ = rangeAttack;
-		this.rangeMove_ = rangeMove;
-		this.type_ = type;
-		this.moved_ = false;
-		this.attacked_ = false;
+		this.lifeValue = lifeValue;
+		this.attackDamage = attackDamage;
+		this.attackRange = attackRange;
+		this.moveRange = moveRange;
+		this.type = type;
+		this.movedThisTurn = false;
+		this.attackedThisTurn = false;
 		this.position = new Position(0, 0, this);
 	}
 	
 	public int getLife() {
-		return this.life_;
+		return this.lifeValue;
 	}
 
 	public TypeCharacter getType() {
-		return this.type_;
+		return this.type;
 	}
 
 	public boolean get_moved() {
-		return this.moved_;
+		return this.movedThisTurn;
 	}
 
 	public boolean getAttacked() {
-		return this.attacked_;
+		return this.attackedThisTurn;
 	}
 
 	public Position getPosition() {

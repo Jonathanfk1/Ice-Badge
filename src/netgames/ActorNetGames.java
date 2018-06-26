@@ -14,15 +14,13 @@ import br.ufsc.inf.leobr.cliente.exception.NaoPossivelConectarException;
 
 import game.Action;
 import game.Control;
-import game.Player;
-import game.TypeAction;
 import gui.GUISelectCharacter;
 
 
 public class ActorNetGames implements OuvidorProxy {
 
 	private static final long serialVersionUID = 6879226942687723339L;
-	protected int id;
+	// protected int id;
 	protected Proxy proxy;
 	protected Control control;
 	protected boolean isMyTurn;

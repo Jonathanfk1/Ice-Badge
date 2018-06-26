@@ -1,18 +1,20 @@
 package board;
 
-import br.ufsc.inf.leobr.cliente.Jogada;
-import br.ufsc.inf.leobr.servidor.Jogo;
 import game.Character;
+
+import br.ufsc.inf.leobr.cliente.Jogada;
 
 public class Position implements Jogada {
 
+	private static final long serialVersionUID = 8000397942187888683L;
 	protected int x;
 	protected int y;
-	protected Character character;
+	protected Character positionedCharacter;
 	protected TypeTile type;
-	protected String image;
+	// protected String image;
 	protected boolean isOccupied;
 	protected boolean isObstacle;
+	protected boolean isObjective;
 
 	public Position(int x, int y, TypeTile type) {
 		super();
@@ -45,7 +47,7 @@ public class Position implements Jogada {
 	}
 
 	public Character getCharacter() {
-		return this.character;
+		return this.positionedCharacter;
 	}
 
 	public TypeTile setCharacterTile(Character character) {
@@ -64,7 +66,7 @@ public class Position implements Jogada {
 	}
 
 	public void setCharacter(Character character) {
-		this.character = character;
+		this.positionedCharacter = character;
 	}
 
 	public TypeTile getTile() {
@@ -77,7 +79,7 @@ public class Position implements Jogada {
 	}
 
 	public void removeCharacter() {
-		this.character = null;
+		this.positionedCharacter = null;
 
 	}
 

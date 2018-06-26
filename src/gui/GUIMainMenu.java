@@ -19,16 +19,15 @@ import game.Control;
 public class GUIMainMenu extends JFrame {
 
 	private static final long serialVersionUID = 668941998137019373L;
-	protected JFrame frame_;
-	protected JPanel panel_;
-	protected Control control_;
+	protected JPanel panel;
+	protected Control control;
 	protected JTextArea connectedText;
 	protected JTextArea roomStartedText;
 	protected String playerName;
 
 	public GUIMainMenu(Control control) {
-		this.control_ = control;
-		this.panel_ = new JPanel();
+		this.control = control;
+		this.panel = new JPanel();
 
 		this.setFrame();
 		this.setButtons();
@@ -39,18 +38,18 @@ public class GUIMainMenu extends JFrame {
 		this.connectedText = new JTextArea("Connected");
 		// buttonsGbc.gridx++;
 		this.connectedText.setVisible(false);
-		this.panel_.add(connectedText);
+		this.panel.add(connectedText);
 
 		this.roomStartedText = new JTextArea("Room Started");
 		// buttonsGbc.gridx++;
 		this.roomStartedText.setVisible(false);
-		this.panel_.add(roomStartedText); 
+		this.panel.add(roomStartedText); 
 	}
 
 	public void setFrame() {
 		GridBagConstraints gbc = new GridBagConstraints();
 		this.setLayout(new GridBagLayout());
-		this.add(panel_, gbc);
+		this.add(panel, gbc);
 		this.setVisible(true);
 		this.setSize(new Dimension(700, 300));
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -81,7 +80,7 @@ public class GUIMainMenu extends JFrame {
 	}
 
 	public void informNotConnected() {
-		JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "You're not connected, can't start game.", "Not connected", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(this.control.getCurrentFrame(), "You're not connected, can't start game.", "Not connected", JOptionPane.ERROR_MESSAGE);
 	}
 
 	public void setButtons() {
@@ -96,11 +95,11 @@ public class GUIMainMenu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand() == "CONNECT") {
-					control_.connectToNetGames();
+					control.connectToNetGames();
 				}
 			}
 		});
-		this.panel_.add(connect, gbc);
+		this.panel.add(connect, gbc);
 
 		// ################## DISCONNECT ##################
 		JButton disconnect = new JButton("DISCONNECT");
@@ -109,11 +108,11 @@ public class GUIMainMenu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand() == "DISCONNECT") {
-					control_.disconnect();;
+					control.disconnect();;
 				}
 			}
 		});
-		this.panel_.add(disconnect, gbc);
+		this.panel.add(disconnect, gbc);
 
 		// ################## START GAME ##################
 
@@ -124,12 +123,12 @@ public class GUIMainMenu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand() == "START GAME") {
-					control_.askToStartGame();
+					control.askToStartGame();
 				}
 
 			}
 		});
-		this.panel_.add(startGame, gbc);
+		this.panel.add(startGame, gbc);
 
 		// ################## EXIT ##################
 
@@ -145,16 +144,16 @@ public class GUIMainMenu extends JFrame {
 
 			}
 		});
-		this.panel_.add(exit, gbc);
+		this.panel.add(exit, gbc);
 
 	}
 
 	public void warnConnectionTrial() {
-		JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "One of the players is not ready to start.", "Start Game received", JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(this.control.getCurrentFrame(), "One of the players is not ready to start.", "Start Game received", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	public void listOfCharactersReceived() {
-		JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "List of characters received.", "Chars received", JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(this.control.getCurrentFrame(), "List of characters received.", "Chars received", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	public void setConnectedText(boolean isConnected) {
@@ -168,7 +167,7 @@ public class GUIMainMenu extends JFrame {
 	}
 
 	public void informRoomAlreadyStarted() {
-		JOptionPane.showMessageDialog(this.control_.getCurrentFrame(), "Room is already started.", "Room already started", JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(this.control.getCurrentFrame(), "Room is already started.", "Room already started", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	public BoardSide askForBoardSide() {
