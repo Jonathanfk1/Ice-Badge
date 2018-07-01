@@ -6,6 +6,8 @@ import board.Position;
 import br.ufsc.inf.leobr.cliente.Jogada;
 
 public class Action implements Jogada {
+	
+	private static final long serialVersionUID = -7438707158228511520L;
 	protected Position selectedPosition;
 	protected Position finalPosition;
 	protected TypeAction type;
@@ -15,6 +17,7 @@ public class Action implements Jogada {
 		this.selectedPosition = selectedPosition;
 		this.finalPosition = finalPosition;
 		this.type = type;
+		this.listOfCharacters = null;
 	}
 
 	public Action(List<Character> listOfCharacters, TypeAction type) {

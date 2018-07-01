@@ -24,37 +24,40 @@ public class Control {
 	protected ActorNetGames actorNetGames;
 	protected ActorPlayer actorPlayer;
 	protected Game game;
-	protected boolean isConnected;
-	protected boolean isFirstPlayer;
-	protected List<Character> selectedCharacters;
-	// protected int charactersLeft;
 	protected GUIMainMenu guiMainMenu;
-	protected GUIBoard guiBoard;
-	protected GUISelectCharacter guiSelectCharacter;
 	protected JFrame currentMenu;
+	protected GUISelectCharacter guiSelectCharacter;
+	protected GUIBoard guiBoard;
 	protected List<Character> opponentsCharacters;
+	protected List<Character> selectedCharacters;
+	protected Integer netGamesPosition;
+	protected boolean isFirstPlayer;
+	protected boolean isConnected;
 	protected boolean isRoomStarted;
 	protected boolean isReadyToStart;
-	protected Integer position;
 
 	public Control() {
-		this.actorPlayer = new ActorPlayer(this);
 		this.actorNetGames = new ActorNetGames(this);
-		this.isConnected = false;
-		this.selectedCharacters = new ArrayList<>();
-		this.isReadyToStart = false;
+		this.actorPlayer = new ActorPlayer(this);
 		this.game = new Game(this);
-	}
-
-	public void runMainMenu() {
 		this.guiMainMenu = new GUIMainMenu(this);
-		currentMenu = guiMainMenu;
+		this.currentMenu = this.guiMainMenu;
+		this.guiSelectCharacter = null;
+		this.guiBoard = null;
+		this.opponentsCharacters = new ArrayList<>();
+		this.selectedCharacters = new ArrayList<>();
+		this.netGamesPosition = null;
+		this.isFirstPlayer = false;
+		this.isConnected = false;
+		this.isRoomStarted = false;
+		this.isReadyToStart = false;
 	}
 
 	public void disconnect() {
 		this.actorNetGames.disconnect();
 		this.setIsRoomStarted(false);
 		this.setIsConnected(false);
+		this.setIsReadyToStart(false);
 		this.selectedCharacters.clear();
 		this.guiSelectCharacter.setVisible(false);
 	}
@@ -69,7 +72,6 @@ public class Control {
 		if (!this.isRoomStarted) {	
 			if(this.isConnected) {
 				this.actorNetGames.sendStart();
-				// if (!this.guiSelectCharacter.isEnabled()) {
 				if (!this.isRoomStarted) {
 					if (this.guiSelectCharacter == null) {
 						this.openSelectCharacterMenu();
@@ -78,7 +80,6 @@ public class Control {
 						this.updateFrame(this.guiSelectCharacter);
 					}
 				}
-				// }
 			} else {
 				this.guiMainMenu.informNotConnected();
 			}
@@ -101,17 +102,10 @@ public class Control {
 		this.game.getPlayer().setName(this.guiMainMenu.getPlayerName());
 		if(isConnected) {
 			this.game.setOpponentName(findOpponentName());
-			// this.game.setOpponentsCharacters();
 		} else {
 			this.game.setOpponentName("Offline Player");
 		}
-		// this.game.openSelectCharacterMenu();
-		// this.game.getOpponent().setCharactersList(this.opponentsCharacters);
 		this.game.createBoard(this.game, DEFAULT_BOARD_SQUARE_SIZE, DEFAULT_BOARD_SQUARE_SIZE);
-		// this.game.getBoard().setMainBases(iStartPlaying);
-		// this.game.setBasesForPlayers(iStartPlaying);
-		// this.game.board.generateBoardObjects();
-		// this.guiSelectCharacter.dispose();
 		this.guiBoard = new GUIBoard(this);
 	}
 
@@ -151,8 +145,6 @@ public class Control {
 	}
 
 	public void selectCharacter(TypeCharacter type) {
-
-		// SELECT CHARACTER LOOP
 		if (this.selectedCharacters.size() < NUMBER_OF_CHARACTERS) {
 			this.selectedCharacters.add(this.game.selectCharacter(type));
 			this.guiSelectCharacter.updateCharactersCount(selectedCharacters.size());
@@ -161,14 +153,6 @@ public class Control {
 				this.guiSelectCharacter.showReadyButton(true);	
 			}
 		} 
-	}
-
-	public Game getGame() {
-		return this.game;
-	}
-
-	public ActorPlayer getActorPlayer() {
-		return this.actorPlayer;
 	}
 
 	public void receiveLaunchedAction(Action launchAction) {
@@ -209,29 +193,10 @@ public class Control {
 		}
 	}
 
-	public void setGuiBoard(GUIBoard guiBoard) {
-		this.guiBoard = guiBoard;
-	}
-
-	public void setGuiMainMenu(GUIMainMenu guiMainMenu) {
-		this.guiMainMenu = guiMainMenu;
-	}
-
-	public void setGuiSelectCharacter(GUISelectCharacter guiSelectCharacter) {
-		this.guiSelectCharacter = guiSelectCharacter;
-	}
-
-	public JFrame getCurrentFrame() {
-		return this.currentMenu;
-	}
 
 	public void openSelectCharacterMenu() {
 		this.guiSelectCharacter = new GUISelectCharacter(this, this.guiMainMenu);
 		this.currentMenu = this.guiSelectCharacter;
-	}
-
-	public void setGame(Game game) {
-		this.game = game;
 	}
 
 	public void removeLastCharacter() {
@@ -246,14 +211,6 @@ public class Control {
 		}
 	}
 
-	public List<Character> getSelectedCharacters() {
-		return selectedCharacters;
-	}
-
-	public void setOpponentsCharacters(List<Character> listOfCharacters) {
-		this.opponentsCharacters = listOfCharacters;
-	}
-
 	public void warnPlayerNotReady() {
 		this.guiMainMenu.warnConnectionTrial();
 	}
@@ -264,6 +221,11 @@ public class Control {
 
 	public void listOfCharactersReceived() {
 		this.guiMainMenu.listOfCharactersReceived();
+	}
+
+	public void sendStartGameMessage() {
+		Message message = new Message(MessageType.START_GAME, this.getSelectedCharacters());
+		this.actorNetGames.sendMessage(message);
 	}
 
 	public void setIsConnected(boolean connected) {
@@ -278,30 +240,78 @@ public class Control {
 		this.guiMainMenu.update(this.guiMainMenu.getGraphics());
 	}
 
-	public void sendStartGameMessage() {
-		Message message = new Message(MessageType.START_GAME, this.getSelectedCharacters());
-		this.actorNetGames.sendMessage(message);
+	public void sendReadyToServer() {
+		Message message = new Message(MessageType.PLAYER_READY, this.getGame().getPlayer().getBoardSide());
+		this.actorNetGames.sendMessage(message);		
 	}
 
 	public BoardSide askForBoardSide() {
-		return this.guiMainMenu.askForBoardSide();
+		int option = this.guiMainMenu.askForBoardSide();
+		if (option == 0) {
+			return BoardSide.UP;
+		} else {
+			return BoardSide.DOWN;
+		}
 	}
 
-	public void setPosition(Integer posicao) {
-		this.position = posicao;
+
+	// > GETTERS AND SETTERS
+
+	// > > EXTERNAL
+
+	public void setOpponentsCharacters(List<Character> listOfCharacters) {
+		this.getGame().getOpponent().setCharactersList(listOfCharacters);
 	}
 
-	public boolean boardSidesSet() {
-		return (this.getGame().getPlayer().getBoardSide() != null);
+	public boolean areBothBoardSidesSet() {
+		return ((this.getGame().getPlayer().getBoardSide() != null)
+		&& (this.getGame().getPlayer().getBoardSide() != null));
 	}
 
-	// public void notPossibleToConnectError(NaoPossivelConectarException e) {
+	// > > INTERNAL
 
-	// }
+	public void setGame(Game game) {
+		this.game = game;
+	}
 
-	// public void alreadyConnectedError(JahConectadoException e) {
+	public Game getGame() {
+		return this.game;
+	}
 
-	// }
+	public ActorPlayer getActorPlayer() {
+		return this.actorPlayer;
+	}
 
-	
+	public List<Character> getSelectedCharacters() {
+		return this.selectedCharacters;
+	}
+
+	public JFrame getCurrentMenu() {
+		return this.currentMenu;
+	}
+
+	public void setCurrentMenu(JFrame menu) {
+		this.currentMenu = menu;
+	}
+
+	public void setNetGamesPosition(Integer posicao) {
+		this.netGamesPosition = posicao;
+	}
+
+	public void setGuiBoard(GUIBoard guiBoard) {
+		this.guiBoard = guiBoard;
+	}
+
+	public void setGuiMainMenu(GUIMainMenu guiMainMenu) {
+		this.guiMainMenu = guiMainMenu;
+	}
+
+	public void setGuiSelectCharacter(GUISelectCharacter guiSelectCharacter) {
+		this.guiSelectCharacter = guiSelectCharacter;
+	}
+
+	public void setIsReadyToStart(boolean isReadyToStart) {
+		this.isReadyToStart = isReadyToStart;
+	}
+
 }

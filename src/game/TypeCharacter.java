@@ -7,32 +7,32 @@ public enum TypeCharacter {
 	ARCHER(30, 20, 8, 2),
 	BARD(20, 20, 2, 6);
 
-	protected int life_;
-	protected int powerAttack_;
-	protected int rangeAttack_;
-	protected int rangeMove_;
+	protected int life;
+	protected int attackDamage;
+	protected int attackRange;
+	protected int moveRange;
 
-	TypeCharacter(int life, int powerAttack, int rangeAttack, int rangeMove) {
-		this.life_ = life;
-		this.powerAttack_ = powerAttack;
-		this.rangeAttack_ = rangeAttack;
-		this.rangeMove_ = rangeMove;
+	TypeCharacter(int life, int attackDamage, int attackRange, int moveRange) {
+		this.life = life;
+		this.attackDamage = attackDamage;
+		this.attackRange = attackRange;
+		this.moveRange = moveRange;
 	}
 
 	public int getLife() {
-		return life_;
+		return this.life;
 	}
 
-	public int getPowerAttack_() {
-		return powerAttack_;
+	public int getpowerAttack() {
+		return this.attackDamage;
 	}
 
-	public int getRangeAttack_() {
-		return rangeAttack_;
+	public int getrangeAttack() {
+		return this.attackRange;
 	}
 
-	public int getRangeMove_() {
-		return rangeMove_;
+	public int getrangeMove() {
+		return this.moveRange;
 	}
 
 }

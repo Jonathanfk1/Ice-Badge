@@ -1,8 +1,6 @@
 package board;
 
-import java.util.ArrayList;
 import java.util.List;
-
 
 import game.Character;
 import game.Game;
@@ -12,10 +10,10 @@ public class Board {
 
 	protected static final int DEFAULT_NUMBER_OF_PLAYERS = 2;
 
-	protected Position[][] positions;
+	protected Game game;
 	protected int rowSize;
 	protected int columnSize;
-	protected Game game;
+	protected Position[][] positions;
 	protected Position opponentBase;
 	protected Position myBase;
 	protected BoardSide playerBoardSide;
@@ -29,10 +27,13 @@ public class Board {
 		this.rowSize = rowSize;
 		this.columnSize = columnSize;
 		this.positions = new Position[rowSize][columnSize];
+		this.myBase = null;
+		this.opponentBase = null;
 		this.playerBoardSide = chosenBoardSide;
+		this.opponentBoardSide = null;
+		this.setBoardSides();
 		this.playerListOfCharacters = this.game.getPlayer().getCharactersList();
 		this.opponentListOfCharacters = this.game.getOpponent().getCharactersList();;
-		this.setBoardSides();
 		this.boardSetup();
 	}
 
@@ -183,23 +184,23 @@ public class Board {
 				charA.setPosition(new Position(0, 1, charA));
 				positions[charA.getPosition().getX()][charA.getPosition().getY()] = charA.getPosition();
 
-				Character charB = player.getCharactersList().get(0);
+				Character charB = player.getCharactersList().get(1);
 				charB.setPosition(new Position(0, 3, charA));
 				positions[charB.getPosition().getX()][charB.getPosition().getY()] = charB.getPosition();
 
-				Character charC = player.getCharactersList().get(0);
+				Character charC = player.getCharactersList().get(2);
 				charC.setPosition(new Position(0, 5, charC));
 				positions[charC.getPosition().getX()][charC.getPosition().getY()] = charC.getPosition();
 
-				Character charD = player.getCharactersList().get(0);
+				Character charD = player.getCharactersList().get(3);
 				charD.setPosition(new Position(0, 9, charD));
 				positions[charD.getPosition().getX()][charD.getPosition().getY()] = charD.getPosition();
 
-				Character charE = player.getCharactersList().get(0);
+				Character charE = player.getCharactersList().get(4);
 				charE.setPosition(new Position(0, 11, charE));
 				positions[charE.getPosition().getX()][charE.getPosition().getY()] = charE.getPosition();
 
-				Character charF = player.getCharactersList().get(0);
+				Character charF = player.getCharactersList().get(5);
 				charF.setPosition(new Position(0, 13, charF));
 				positions[charF.getPosition().getX()][charF.getPosition().getY()] = charF.getPosition();
 			break;

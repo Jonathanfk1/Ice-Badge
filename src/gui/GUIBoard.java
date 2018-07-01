@@ -1,7 +1,6 @@
 package gui;
 
 import game.Control;
-import board.TypeTile;
 import board.Board;
 
 import java.awt.BorderLayout;
@@ -29,17 +28,17 @@ public class GUIBoard extends JFrame {
 	private ImageIcon baseIcon;
 	private ImageIcon treeIcon;
 	private ImageIcon waterIcon;
-	private ImageIcon charIcon1;
-	private ImageIcon charIcon2;
-	private ImageIcon charIcon3;
-	private ImageIcon mountainIcon;
 	private ImageIcon rockIcon;
+	private ImageIcon mountainIcon;
+	private ImageIcon archerWarriorIcon;
+	private ImageIcon swordsman1Icon;
+	private ImageIcon cleric1Icon;
+	private ImageIcon bardIcon;
 
 	public GUIBoard(Control control) {
 		super();
 		this.control = control;
 		this.board = control.getGame().getBoard();
-		this.control.setGuiBoard(this);
 
 		this.setFrame();
 		this.setPanel();
@@ -104,22 +103,26 @@ public class GUIBoard extends JFrame {
 		ImageIcon waterIcon = new ImageIcon("resources/waterTile.png");
 		waterIcon.setImage(waterIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
 		this.waterIcon = waterIcon;
-
-		ImageIcon charIcon1 = new ImageIcon("resources/swordsmanTile1.png");
-		charIcon1.setImage(charIcon1.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
-		this.charIcon1 = charIcon1;
-
-		ImageIcon charIcon2 = new ImageIcon("resources/clericTile1.png");
-		charIcon2.setImage(charIcon2.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
-		this.charIcon2 = charIcon2;
-
-		ImageIcon charIcon3 = new ImageIcon("resources/warriorTile.png");
-		charIcon3.setImage(charIcon3.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
-		this.charIcon3 = charIcon3;
-
+		
 		ImageIcon rockIcon = new ImageIcon("resources/rockTile.png");
 		rockIcon.setImage(rockIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
 		this.rockIcon = rockIcon;
+
+		ImageIcon archerWarriorIcon = new ImageIcon("resources/warriorTile.png");
+		archerWarriorIcon.setImage(archerWarriorIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
+		this.archerWarriorIcon = archerWarriorIcon;
+
+		ImageIcon swordsman1Icon = new ImageIcon("resources/swordsmanTile1.png");
+		swordsman1Icon.setImage(swordsman1Icon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
+		this.swordsman1Icon = swordsman1Icon;
+
+		ImageIcon cleric1Icon = new ImageIcon("resources/clericTile1.png");
+		cleric1Icon.setImage(cleric1Icon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
+		this.cleric1Icon = cleric1Icon;
+
+		ImageIcon bardIcon = new ImageIcon("resources/bardTile1.png");
+		bardIcon.setImage(bardIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
+		this.bardIcon = bardIcon;
 
 	}
 
@@ -210,12 +213,12 @@ public class GUIBoard extends JFrame {
 					break;
 					case MAIN_BASE_OPPONENT:
 							tile.setIcon(this.baseIcon);
-							tile.setActionCommand("base");
+							tile.setActionCommand("main_base_opponent");
 							tile.addActionListener(new ActionListener() {
 								@Override
 								public void actionPerformed(ActionEvent e) {
-									if (e.getActionCommand() == "base") {
-										System.out.println("clicked base");
+									if (e.getActionCommand() == "main_base_opponent") {
+										System.out.println("clicked opponent's main base");
 									}
 								}
 							});
@@ -225,12 +228,12 @@ public class GUIBoard extends JFrame {
 					break;
 					case MAIN_BASE_SELF:
 							tile.setIcon(this.baseIcon);
-							tile.setActionCommand("base");
+							tile.setActionCommand("main_base_self");
 							tile.addActionListener(new ActionListener() {
 								@Override
 								public void actionPerformed(ActionEvent e) {
-									if (e.getActionCommand() == "base") {
-										System.out.println("clicked base");
+									if (e.getActionCommand() == "main_base_self") {
+										System.out.println("clicked own main base");
 									}
 								}
 							});
@@ -238,14 +241,14 @@ public class GUIBoard extends JFrame {
 							System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
 							+ " to position " + i + " , " + j);
 					break;
-					case CHARACTER_TYPE_1:
-						tile.setIcon(this.charIcon1);
-						tile.setActionCommand("base");
+					case CHARACTER_TYPE_SWORDSMAN:
+						tile.setIcon(this.swordsman1Icon);
+						tile.setActionCommand("swordsman");
 						tile.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								if (e.getActionCommand() == "base") {
-									System.out.println("clicked base");
+								if (e.getActionCommand() == "swordsman") {
+									System.out.println("clicked swordsman");
 								}
 							}
 						});
@@ -253,14 +256,14 @@ public class GUIBoard extends JFrame {
 						System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
 						+ " to position " + i + " , " + j);
 					break;
-					case CHARACTER_TYPE_2:
-						tile.setIcon(this.charIcon2);
-						tile.setActionCommand("base");
+					case CHARACTER_TYPE_CLERIC:
+						tile.setIcon(this.cleric1Icon);
+						tile.setActionCommand("cleric");
 						tile.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								if (e.getActionCommand() == "base") {
-									System.out.println("clicked base");
+								if (e.getActionCommand() == "cleric") {
+									System.out.println("clicked cleric");
 								}
 							}
 						});
@@ -268,14 +271,29 @@ public class GUIBoard extends JFrame {
 						System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
 						+ " to position " + i + " , " + j);
 					break;
-					case CHARACTER_TYPE_3:
-						tile.setIcon(this.charIcon3);
-						tile.setActionCommand("base");
+					case CHARACTER_TYPE_ARCHER:
+						tile.setIcon(this.archerWarriorIcon);
+						tile.setActionCommand("archer");
 						tile.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								if (e.getActionCommand() == "base") {
-									System.out.println("clicked base");
+								if (e.getActionCommand() == "archer") {
+									System.out.println("clicked archer");
+								}
+							}
+						});
+						this.upperPanel.add(tile);
+						System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
+						+ " to position " + i + " , " + j);
+					break;
+					case CHARACTER_TYPE_BARD:
+						tile.setIcon(this.bardIcon);
+						tile.setActionCommand("bard");
+						tile.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								if (e.getActionCommand() == "bard") {
+									System.out.println("clicked bard");
 								}
 							}
 						});
@@ -284,19 +302,6 @@ public class GUIBoard extends JFrame {
 						+ " to position " + i + " , " + j);
 					break;
 					default:
-							// Position[][] positions = this.board.getPositions();
-							// if(positions[i][j].getCharacter() != null) {
-								// tile.setIcon(this.char1Icon);
-								// tile.setActionCommand("char 1");
-								// tile.addActionListener(new ActionListener() {
-									// @Override
-									// public void actionPerformed(ActionEvent e) {
-										// if (e.getActionCommand() == "char 1") {
-											// System.out.println("clicked char 1");
-										// }
-									// }
-								// });
-							// }
 							System.out.println("Default Case");
 							System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
 							+ " to position " + i + " , " + j);
@@ -308,8 +313,8 @@ public class GUIBoard extends JFrame {
 		return null;
 	}
 
-	private void updatePosition() {
-
+	private void updateBoard() {
+		
 	}
 
 	private void setButtons() {

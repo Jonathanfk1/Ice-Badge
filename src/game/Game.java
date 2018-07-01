@@ -17,10 +17,25 @@ public class Game {
 	protected boolean hasWinner;
 
 	public Game(Control control) {
-		this.opponent = new Player();
+		this.board = null;
 		this.player = new Player();
+		this.opponent = new Player();
 		this.control = control;
+		this.isOngoing = false;
+		this.isInterrupted = false;
+		this.hasWinner = false;
 	}
+
+	public Game(Control control, Player player, Player opponent) {
+		this.board = null;
+		this.player = player;
+		this.opponent = opponent;
+		this.control = control;
+		this.isOngoing = false;
+		this.isInterrupted = false;
+		this.hasWinner = false;
+	}
+
 
 	public Position getPosition(int x, int y) {
 		return this.board.getPosition(x, y);
@@ -93,9 +108,6 @@ public class Game {
 		return null;
 	}
 
-	// ##########################
-	// teste
-
 	public Player getOpponent() {
 		return this.opponent;
 	}
@@ -138,10 +150,6 @@ public class Game {
 
 	public void addSelectedCharacters(List<Character> selectedCharacters) {
 		player.addCharacters(selectedCharacters);
-	}
-
-	public void setOpponentsCharacters(List<Character> opponentListOfCharacters) {
-		this.opponent.listCharacter = opponentListOfCharacters;
 	}
 
 }

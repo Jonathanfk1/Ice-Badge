@@ -17,24 +17,33 @@ public class Message implements Jogada {
     
     public Message(MessageType messageType) {
         super();
+        this.message = null;
         this.messageType = messageType;
+        this.listOfCharacters = null;
+        this.playerBoardSide = null;
     }
 
     public Message(List<Character> listOfCharacters) {
         super();
-        this.listOfCharacters = listOfCharacters;
+        this.message = null;
         this.messageType = MessageType.LIST_OF_CHARACTERS;
+        this.listOfCharacters = listOfCharacters;
+        this.playerBoardSide = null;
     }
 
     public Message(MessageType messageType, List<Character> listOfCharacters) {
         super();
+        this.message = null;
         this.messageType = messageType;
         this.listOfCharacters = listOfCharacters;
+        this.playerBoardSide = null;
     }
 
     public Message(MessageType messageType, BoardSide playerBoardSide) {
         super();
+        this.message = null;
         this.messageType = messageType;
+        this.listOfCharacters = null;
         this.playerBoardSide = playerBoardSide;
     }
 
@@ -42,6 +51,8 @@ public class Message implements Jogada {
         super();
         this.message = message;
         this.messageType = MessageType.TEXT;
+        this.listOfCharacters = null;
+        this.playerBoardSide = null;
     }
 
     public String getMessage() {

@@ -15,8 +15,6 @@ import javax.swing.SwingUtilities;
 
 import game.Control;
 import game.TypeCharacter;
-import netgames.Message;
-import netgames.MessageType;
 
 public class GUISelectCharacter extends JFrame {
 
@@ -53,11 +51,10 @@ public class GUISelectCharacter extends JFrame {
 				if (e.getActionCommand() == "Ready") {
 					control.toggleIsReadyToStart();
 					updateReadyText();
-					if (!control.boardSidesSet()) {
-						control.getGame().getPlayer().setBoardSide(control.askForBoardSide());
-					}
-					Message message = new Message(MessageType.PLAYER_READY, control.getGame().getPlayer().getBoardSide());
-					control.getActorNetGames().sendMessage(message);			
+//					if (!control.areBothBoardSidesSet()) {
+//						control.getGame().getPlayer().setBoardSide(control.askForBoardSide());
+//					}
+					control.sendReadyToServer();	
 				}
 			}
 		});

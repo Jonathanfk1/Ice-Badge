@@ -13,34 +13,51 @@ public class Player {
 	protected Position selectedPosition;
 	protected Position mainBase;
 	protected Action lastAction;
-	protected List<Character> listCharacter;
-	private BoardSide boardSide;
+	protected List<Character> listOfCharacters;
+	protected BoardSide boardSide;
+
+
+	public Player() {
+		this.name = "";
+		this.turn = false;
+		this.selectedPosition = null;
+		this.mainBase = null;
+		this.lastAction = null;
+		this.listOfCharacters = new ArrayList<>();
+		this.boardSide = null;
+	}
 
 	public Player(String name) {
 		this.name = name;
-		// this.mainBase = new Position(0, 0, null);
 		this.turn = false;
-		this.listCharacter = new ArrayList<>();
+		this.selectedPosition = null;
+		this.mainBase = null;
+		this.lastAction = null;
+		this.listOfCharacters = new ArrayList<>();
+		this.boardSide = null;
 	}
 
-	public Player() {
-		// this.mainBase = new Position(0, 0, null);
-		this.turn = false;
-		this.name = "Opponent";
-		this.listCharacter = new ArrayList<>();
+	public Player(String name, boolean turn, Position mainBase, List<Character> listOfCharacters, BoardSide boardSide) {
+		this.name = name;
+		this.turn = turn;
+		this.selectedPosition = null;
+		this.mainBase = mainBase;
+		this.lastAction = null;
+		this.listOfCharacters = listOfCharacters;
+		this.boardSide = boardSide;
 	}
 
 	public void addCharacter(Character character) {
-		this.listCharacter.add(character);
+		this.listOfCharacters.add(character);
 		System.out.println(character.getType()+"'s been added");
 	}
 
 	public void removeCharacter(Character character) {
-		this.listCharacter.remove(character);
+		this.listOfCharacters.remove(character);
 	}
 
 	public boolean checkPlayerCharacter(Character character) {
-		if (this.listCharacter.contains(character))
+		if (this.listOfCharacters.contains(character))
 			return true;
 		return false;
 	}
@@ -48,12 +65,6 @@ public class Player {
 	public void setMainBase(Position base) {
 		this.mainBase = base;
 	}
-
-	// public void removeMainBase(Position base) {
-	// 	if (this.bases_.size() > 1) {
-	// 		this.bases_.remove(base);
-	// 	}
-	// }
 
 	public Position getMainBase() {
 		System.out.println(this.name + "'s mainBase x: " + mainBase.getX() + " y: " + mainBase.getY());
@@ -71,11 +82,11 @@ public class Player {
 	}
 
 	public List<Character> getCharactersList() {
-		return this.listCharacter;
+		return this.listOfCharacters;
 	}
 
 	public void setCharactersList(List<Character> charactersList) {
-		this.listCharacter = charactersList;
+		this.listOfCharacters = charactersList;
 	}
 
 	public String getName() {
@@ -108,6 +119,10 @@ public class Player {
 
 	public BoardSide getBoardSide() {
 		return this.boardSide;
+	}
+
+	public boolean isBoardSideSet() {
+		return (this.boardSide != null);
 	}
 
 }

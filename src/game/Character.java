@@ -23,9 +23,11 @@ public class Character implements Jogada {
 		this.attackDamage = attackDamage;
 		this.attackRange = attackRange;
 		this.moveRange = moveRange;
-		this.type = type;
 		this.movedThisTurn = false;
 		this.attackedThisTurn = false;
+		this.type = type;
+		this.willDoubleAttack = false;
+		this.willCounterAttack = false;
 		this.position = new Position(0, 0, this);
 	}
 	

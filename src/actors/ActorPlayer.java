@@ -9,7 +9,6 @@ public class ActorPlayer extends Player {
 
     public ActorPlayer(Control control) {
         this.control = control;
-        this.control.setActorPlayer(this);
     }
 
     public void askToConnect() {

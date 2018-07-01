@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
-import board.BoardSide;
 import game.Control;
 
 public class GUIMainMenu extends JFrame {
@@ -80,7 +79,7 @@ public class GUIMainMenu extends JFrame {
 	}
 
 	public void informNotConnected() {
-		JOptionPane.showMessageDialog(this.control.getCurrentFrame(), "You're not connected, can't start game.", "Not connected", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(this.control.getCurrentMenu(), "You're not connected, can't start game.", "Not connected", JOptionPane.ERROR_MESSAGE);
 	}
 
 	public void setButtons() {
@@ -149,11 +148,11 @@ public class GUIMainMenu extends JFrame {
 	}
 
 	public void warnConnectionTrial() {
-		JOptionPane.showMessageDialog(this.control.getCurrentFrame(), "One of the players is not ready to start.", "Start Game received", JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(this.control.getCurrentMenu(), "One of the players is not ready to start.", "Start Game received", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	public void listOfCharactersReceived() {
-		JOptionPane.showMessageDialog(this.control.getCurrentFrame(), "List of characters received.", "Chars received", JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(this.control.getCurrentMenu(), "List of characters received.", "Chars received", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	public void setConnectedText(boolean isConnected) {
@@ -167,13 +166,13 @@ public class GUIMainMenu extends JFrame {
 	}
 
 	public void informRoomAlreadyStarted() {
-		JOptionPane.showMessageDialog(this.control.getCurrentFrame(), "Room is already started.", "Room already started", JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(this.control.getCurrentMenu(), "Room is already started.", "Room already started", JOptionPane.PLAIN_MESSAGE);
 	}
 
-	public BoardSide askForBoardSide() {
+	public int askForBoardSide() {
 			Object[] options = {"UP",
 			"DOWN"};
-			int n = JOptionPane.showOptionDialog(this,
+			int chosenOption = JOptionPane.showOptionDialog(this,
 			"Chose your side of the board",
 			"Choose side",
 			JOptionPane.YES_NO_CANCEL_OPTION,
@@ -181,11 +180,7 @@ public class GUIMainMenu extends JFrame {
 			null,
 			options,
 			options[1]);
-			if (n == 0) {
-				return BoardSide.UP;
-			} else {
-				return BoardSide.DOWN;
-			}
+			return chosenOption;
 	}
 
 	public String getPlayerName() {

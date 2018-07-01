@@ -53,13 +53,13 @@ public class Position implements Jogada {
 	public TypeTile setCharacterTile(Character character) {
 		switch (character.getType()) {
 			case BARD:
-				return TypeTile.CHARACTER_TYPE_1;
+				return TypeTile.CHARACTER_TYPE_BARD;
 			case ARCHER:
-				return TypeTile.CHARACTER_TYPE_2;
+				return TypeTile.CHARACTER_TYPE_ARCHER;
 			case SWORDSMAN:
-				return TypeTile.CHARACTER_TYPE_2;
+				return TypeTile.CHARACTER_TYPE_SWORDSMAN;
 			case CLERIG:
-				return TypeTile.CHARACTER_TYPE_3;
+				return TypeTile.CHARACTER_TYPE_CLERIC;
 			default:
 			return null;
 		}

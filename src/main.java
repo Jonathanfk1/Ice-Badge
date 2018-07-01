@@ -25,7 +25,7 @@ public class main {
 		// control.tellIsFirstToPlay();
 		
 
-		control.runMainMenu();
+		
 
 		// control.connectToNetGames();
 		// control.setGame(new Game(control));
@@ -37,6 +37,11 @@ public class main {
 		// // control.getGame().getBoard().boardSetup();
 		// control.askForBoardSide();
 		// new GUIBoard(control);
+
+
+		Tests tests = new Tests(control);
+		tests.testMockGameStart();
+		
 
 
 	}
