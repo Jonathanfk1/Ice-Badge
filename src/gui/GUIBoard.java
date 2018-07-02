@@ -34,11 +34,13 @@ public class GUIBoard extends JFrame {
 	private ImageIcon swordsman1Icon;
 	private ImageIcon cleric1Icon;
 	private ImageIcon bardIcon;
+	private JButton[][] buttonsMap;
 
 	public GUIBoard(Control control) {
 		super();
 		this.control = control;
 		this.board = control.getGame().getBoard();
+		this.buttonsMap = new JButton[this.control.getGame().getBoard().getRowSize()][this.control.getGame().getBoard().getColumnSize()];
 
 		this.setFrame();
 		this.setPanel();
@@ -135,15 +137,20 @@ public class GUIBoard extends JFrame {
 				JButton tile = new JButton();
 				tile.setPreferredSize(new Dimension(15, 15));
 				tile.setContentAreaFilled(false);
+				this.buttonsMap[i][j] = tile;
 				switch(control.getGame().getBoard().getPositions()[i][j].getTile()) {
 					case GRASS:
 						tile.setIcon(this.grassIcon);
 						tile.setActionCommand("grass");
+						final int innerIg = i;
+						final int innerJg = j;
 						tile.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								if (e.getActionCommand() == "grass") {
 									System.out.println("clicked grass");
+									cleanSelection();
+									control.clickedGrass(control.getGame().getPosition(innerIg, innerJg));
 								}
 							}
 						});
@@ -159,6 +166,7 @@ public class GUIBoard extends JFrame {
 							public void actionPerformed(ActionEvent e) {
 								if (e.getActionCommand() == "water") {
 									System.out.println("clicked water");
+									cleanSelection();
 								}
 							}
 						});
@@ -174,6 +182,7 @@ public class GUIBoard extends JFrame {
 							public void actionPerformed(ActionEvent e) {
 								if (e.getActionCommand() == "mountain") {
 									System.out.println("clicked mountain");
+									cleanSelection();
 								}
 							}
 						});
@@ -189,6 +198,7 @@ public class GUIBoard extends JFrame {
 							public void actionPerformed(ActionEvent e) {
 								if (e.getActionCommand() == "rock") {
 									System.out.println("clicked rock");
+									cleanSelection();
 								}
 							}
 						});
@@ -204,6 +214,7 @@ public class GUIBoard extends JFrame {
 							public void actionPerformed(ActionEvent e) {
 								if (e.getActionCommand() == "tree") {
 									System.out.println("clicked tree");
+									cleanSelection();
 								}
 							}
 						});
@@ -211,29 +222,18 @@ public class GUIBoard extends JFrame {
 						System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
 						+ " to position " + i + " , " + j);
 					break;
-					case MAIN_BASE_OPPONENT:
+					case MAIN_BASE:
 							tile.setIcon(this.baseIcon);
-							tile.setActionCommand("main_base_opponent");
+							tile.setActionCommand("main_base");
+							final int innerIb = i;
+							final int innerJb = j;
 							tile.addActionListener(new ActionListener() {
 								@Override
 								public void actionPerformed(ActionEvent e) {
-									if (e.getActionCommand() == "main_base_opponent") {
-										System.out.println("clicked opponent's main base");
-									}
-								}
-							});
-							this.upperPanel.add(tile);
-							System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
-							+ " to position " + i + " , " + j);
-					break;
-					case MAIN_BASE_SELF:
-							tile.setIcon(this.baseIcon);
-							tile.setActionCommand("main_base_self");
-							tile.addActionListener(new ActionListener() {
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									if (e.getActionCommand() == "main_base_self") {
-										System.out.println("clicked own main base");
+									if (e.getActionCommand() == "main_base") {
+										System.out.println("clicked main base");
+										control.clickedBase(control.getGame().getPosition(innerIb, innerJb));
+										cleanSelection();
 									}
 								}
 							});
@@ -244,11 +244,15 @@ public class GUIBoard extends JFrame {
 					case CHARACTER_TYPE_SWORDSMAN:
 						tile.setIcon(this.swordsman1Icon);
 						tile.setActionCommand("swordsman");
+						final int innerI1 = i;
+						final int innerJ1 = j;
 						tile.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								if (e.getActionCommand() == "swordsman") {
 									System.out.println("clicked swordsman");
+									// System.out.println("Clicked " + tile.getAlignmentX() + tile.getAlignmentY() + tile.getX() + tile.getY());
+									control.clickedCharacter(control.getGame().getPosition(innerI1, innerJ1));
 								}
 							}
 						});
@@ -259,11 +263,14 @@ public class GUIBoard extends JFrame {
 					case CHARACTER_TYPE_CLERIC:
 						tile.setIcon(this.cleric1Icon);
 						tile.setActionCommand("cleric");
+						final int innerI2 = i;
+						final int innerJ2 = j;
 						tile.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								if (e.getActionCommand() == "cleric") {
 									System.out.println("clicked cleric");
+									control.clickedCharacter(control.getGame().getPosition(innerI2, innerJ2));
 								}
 							}
 						});
@@ -274,11 +281,14 @@ public class GUIBoard extends JFrame {
 					case CHARACTER_TYPE_ARCHER:
 						tile.setIcon(this.archerWarriorIcon);
 						tile.setActionCommand("archer");
+						final int innerI3 = i;
+						final int innerJ3 = j;
 						tile.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								if (e.getActionCommand() == "archer") {
 									System.out.println("clicked archer");
+									control.clickedCharacter(control.getGame().getPosition(innerI3, innerJ3));
 								}
 							}
 						});
@@ -289,11 +299,14 @@ public class GUIBoard extends JFrame {
 					case CHARACTER_TYPE_BARD:
 						tile.setIcon(this.bardIcon);
 						tile.setActionCommand("bard");
+						final int innerI4 = i;
+						final int innerJ4 = j;
 						tile.addActionListener(new ActionListener() {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								if (e.getActionCommand() == "bard") {
 									System.out.println("clicked bard");
+									control.clickedCharacter(control.getGame().getPosition(innerI4, innerJ4));
 								}
 							}
 						});
@@ -311,6 +324,67 @@ public class GUIBoard extends JFrame {
 		}
 		
 		return null;
+	}
+
+	public void surroundAction(int x, int y, int range) {
+		cleanSelection();
+
+		int matrixInitX = x-range;
+		int matrixInitY = y-range;
+		if (matrixInitX < 0) {
+			matrixInitX = 0;
+		} else if (matrixInitX > this.control.getGame().getBoard().getRowSize()) {
+			matrixInitX = this.control.getGame().getBoard().getRowSize();
+		}
+		if (matrixInitY < 0) {
+			matrixInitY = 0;
+		} else if (matrixInitY > this.control.getGame().getBoard().getColumnSize()) {
+			matrixInitY = this.control.getGame().getBoard().getRowSize();
+		}
+
+		int matrixBoundsX = x+(range)+1;
+		int matrixBoundsY = y+(range)+1;
+		if (matrixBoundsX < 0) {
+			matrixBoundsX = 0;
+		} else if (matrixBoundsX > this.control.getGame().getBoard().getRowSize()) {
+			matrixBoundsX = this.control.getGame().getBoard().getRowSize();
+		}
+		if (matrixBoundsY < 0) {
+			matrixBoundsY = 0;
+		} else if (matrixBoundsY > this.control.getGame().getBoard().getRowSize()) {
+			matrixBoundsY = this.control.getGame().getBoard().getRowSize();
+		}
+
+
+		for (int i = matrixInitX; i < matrixBoundsX; i++) {
+			for (int j = matrixInitY; j < matrixBoundsY; j++) {
+				if (this.buttonsMap[i][j] != null) {
+					this.buttonsMap[i][j].setContentAreaFilled(true);
+					if (this.control.getGame().getBoard().getPositions()[i][j].isObstacle()) {
+						this.buttonsMap[i][j].setContentAreaFilled(false);
+					}
+					if (this.control.getGame().getBoard().getPosition(i, j).getCharacter() != null 
+					|| this.control.getGame().getBoard().getPosition(i, j).isOccupied()) {
+						if (this.control.getGame().getBoard().getPosition(i, j).getCharacter().getOwner() == this.control.getGame().getPlayer()) {
+							this.buttonsMap[i][j].setContentAreaFilled(false);
+						} else {
+							this.buttonsMap[i][j].setContentAreaFilled(true);
+						}
+					}
+					if (this.control.getGame().getBoard().getPositions()[i][j].isObjective()) {
+						this.buttonsMap[i][j].setContentAreaFilled(true);
+					}
+				}
+			}
+		}
+	}
+
+	public void cleanSelection() {
+		for (int i = 0; i < this.control.getGame().getBoard().getRowSize(); i++) {
+			for (int j = 0; j < this.control.getGame().getBoard().getColumnSize(); j++) {
+				this.buttonsMap[i][j].setContentAreaFilled(false);
+			}
+		}
 	}
 
 	private void updateBoard() {
@@ -340,6 +414,20 @@ public class GUIBoard extends JFrame {
 		} else {
 			JOptionPane.showMessageDialog(this, "Wait for opponent to move.");
 		}
+	}
+
+	public int askForAction() {
+		Object[] actions = {"MOVE",
+			"ATTACK"};
+			int chosenAction = JOptionPane.showOptionDialog(this,
+			"Chose an action",
+			"Choose action",
+			JOptionPane.YES_NO_CANCEL_OPTION,
+			JOptionPane.QUESTION_MESSAGE,
+			null,
+			actions,
+			actions[1]);
+			return chosenAction;
 	}
 
 }

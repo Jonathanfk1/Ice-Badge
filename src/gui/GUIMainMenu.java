@@ -122,7 +122,7 @@ public class GUIMainMenu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand() == "START GAME") {
-					control.askToStartGame();
+					control.askToStartRoom();
 				}
 
 			}

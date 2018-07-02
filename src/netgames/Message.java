@@ -5,6 +5,7 @@ import game.Character;
 import java.util.List;
 
 import board.BoardSide;
+import board.Position;
 import br.ufsc.inf.leobr.cliente.Jogada;
 
 public class Message implements Jogada {
@@ -13,7 +14,8 @@ public class Message implements Jogada {
 	protected String message;
     protected MessageType messageType;
 	protected List<Character> listOfCharacters;
-	protected BoardSide playerBoardSide;
+    protected BoardSide playerBoardSide;
+    protected Position[][] positions;
     
     public Message(MessageType messageType) {
         super();
@@ -21,6 +23,7 @@ public class Message implements Jogada {
         this.messageType = messageType;
         this.listOfCharacters = null;
         this.playerBoardSide = null;
+        this.positions = null;
     }
 
     public Message(List<Character> listOfCharacters) {
@@ -29,6 +32,7 @@ public class Message implements Jogada {
         this.messageType = MessageType.LIST_OF_CHARACTERS;
         this.listOfCharacters = listOfCharacters;
         this.playerBoardSide = null;
+        this.positions = null;
     }
 
     public Message(MessageType messageType, List<Character> listOfCharacters) {
@@ -37,6 +41,7 @@ public class Message implements Jogada {
         this.messageType = messageType;
         this.listOfCharacters = listOfCharacters;
         this.playerBoardSide = null;
+        this.positions = null;
     }
 
     public Message(MessageType messageType, BoardSide playerBoardSide) {
@@ -45,17 +50,29 @@ public class Message implements Jogada {
         this.messageType = messageType;
         this.listOfCharacters = null;
         this.playerBoardSide = playerBoardSide;
+        this.positions = null;
     }
+    
 
-    public Message(String message) {
+    public Message(MessageType messageType, Position[][] positions) {
         super();
-        this.message = message;
-        this.messageType = MessageType.TEXT;
+        this.message = null;
+        this.messageType = messageType;
         this.listOfCharacters = null;
         this.playerBoardSide = null;
+        this.positions = positions;
     }
+    
+    public Message(MessageType messageType, List<Character> selectedCharacters, Position[][] positions) {
+        super();
+        this.message = null;
+        this.messageType = messageType;
+        this.listOfCharacters = selectedCharacters;
+        this.playerBoardSide = null;
+        this.positions = positions;
+	}
 
-    public String getMessage() {
+	public String getMessage() {
         return this.message;
     }
     
@@ -69,6 +86,10 @@ public class Message implements Jogada {
 
 	public BoardSide getPlayerBoardSide() {
 		return this.playerBoardSide;
+	}
+
+	public Position[][] getPositions() {
+		return this.positions;
 	}
 
 

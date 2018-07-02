@@ -1,5 +1,7 @@
 package game;
 
+import java.awt.Component;
+
 import board.Position;
 import br.ufsc.inf.leobr.cliente.Jogada;
 
@@ -16,6 +18,7 @@ public class Character implements Jogada {
 	protected boolean willDoubleAttack;
 	protected boolean willCounterAttack;
 	protected Position position;
+	protected Player owner;
 
 	public Character(int lifeValue, int attackDamage, int attackRange, int moveRange, TypeCharacter type) {
 		super();
@@ -29,6 +32,7 @@ public class Character implements Jogada {
 		this.willDoubleAttack = false;
 		this.willCounterAttack = false;
 		this.position = new Position(0, 0, this);
+		this.owner = null;
 	}
 	
 	public int getLife() {
@@ -39,7 +43,7 @@ public class Character implements Jogada {
 		return this.type;
 	}
 
-	public boolean get_moved() {
+	public boolean getMoved() {
 		return this.movedThisTurn;
 	}
 
@@ -53,6 +57,22 @@ public class Character implements Jogada {
 
 	public void setPosition(Position position) {
 		this.position = position;
+	}
+
+	public Player getOwner() {
+		return this.owner;
+	}
+
+	public void setOwner(Player player) {
+		this.owner = player;
+	}
+
+	public int getMoveRange() {
+		return this.moveRange;
+	}
+
+	public int getAttackRange() {
+		return this.attackRange;
 	}
 
 }

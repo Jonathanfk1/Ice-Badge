@@ -35,6 +35,7 @@ public class Control {
 	protected boolean isConnected;
 	protected boolean isRoomStarted;
 	protected boolean isReadyToStart;
+	protected boolean isCharacterSelected;
 
 	public Control() {
 		this.actorNetGames = new ActorNetGames(this);
@@ -68,7 +69,7 @@ public class Control {
 		frame.repaint();
 	}
 	
-	public void askToStartGame() {
+	public void askToStartRoom() {
 		if (!this.isRoomStarted) {	
 			if(this.isConnected) {
 				this.actorNetGames.sendStart();
@@ -106,7 +107,16 @@ public class Control {
 			this.game.setOpponentName("Offline Player");
 		}
 		this.game.createBoard(this.game, DEFAULT_BOARD_SQUARE_SIZE, DEFAULT_BOARD_SQUARE_SIZE);
-		this.guiBoard = new GUIBoard(this);
+	}
+	
+	public void createGameWithSetPositions(boolean iStartPlaying, Position[][] positions) {
+		this.game.getPlayer().setName(this.guiMainMenu.getPlayerName());
+		if(isConnected) {
+			this.game.setOpponentName(findOpponentName());
+		} else {
+			this.game.setOpponentName("Offline Player");
+		}
+		this.game.createBoardWithSetPositions(this.game, DEFAULT_BOARD_SQUARE_SIZE, DEFAULT_BOARD_SQUARE_SIZE, positions);
 	}
 
 	public void startGame() {
@@ -241,8 +251,9 @@ public class Control {
 	}
 
 	public void sendReadyToServer() {
+		this.game.getPlayer().setCharactersList(this.selectedCharacters);
 		Message message = new Message(MessageType.PLAYER_READY, this.getGame().getPlayer().getBoardSide());
-		this.actorNetGames.sendMessage(message);		
+		this.actorNetGames.sendMessage(message);	
 	}
 
 	public BoardSide askForBoardSide() {
@@ -252,6 +263,17 @@ public class Control {
 		} else {
 			return BoardSide.DOWN;
 		}
+	}
+
+	public void openNewBoard() {
+		this.guiBoard = new GUIBoard(this);
+	}
+	
+	public void gameAboutToStart(List<Character> listOfOpponentCharacters) {
+		System.out.println("BEGIN GAME RECEIVED - GAME ABOUT TO START.");
+
+		this.game.getOpponent().setCharactersList(listOfOpponentCharacters);
+		this.game.getPlayer().setCharactersList(this.selectedCharacters);
 	}
 
 
@@ -265,7 +287,7 @@ public class Control {
 
 	public boolean areBothBoardSidesSet() {
 		return ((this.getGame().getPlayer().getBoardSide() != null)
-		&& (this.getGame().getPlayer().getBoardSide() != null));
+		&& (this.getGame().getOpponent().getBoardSide() != null));
 	}
 
 	// > > INTERNAL
@@ -306,6 +328,10 @@ public class Control {
 		this.guiMainMenu = guiMainMenu;
 	}
 
+	public GUISelectCharacter getSelectCharacterGui() {
+		return this.guiSelectCharacter;
+	}
+
 	public void setGuiSelectCharacter(GUISelectCharacter guiSelectCharacter) {
 		this.guiSelectCharacter = guiSelectCharacter;
 	}
@@ -313,5 +339,71 @@ public class Control {
 	public void setIsReadyToStart(boolean isReadyToStart) {
 		this.isReadyToStart = isReadyToStart;
 	}
+
+	public GUIBoard getGuiBoard() {
+		return this.guiBoard;
+	}
+
+	public void clickedCharacter(Position position) {
+		System.out.println("Clicked Character of position (" + position.getX() + ", " +  position.getY() 
+		+ ") which is " + position.getCharacter().getType().toString() + " from player " + position.getCharacter().getOwner().getName());
+		boolean isFromSelf = false;
+		for (Character character : this.game.getPlayer().getCharactersList()) {
+			if (character.getPosition().getX() == position.getX() && character.getPosition().getY() == position.getY()) {
+				isFromSelf = true;
+			}
+		}
+		if (isFromSelf) {
+			this.isCharacterSelected = true;
+			int action = this.guiBoard.askForAction();
+			if (action == 0) {
+				surroundAction(position.getX(), position.getY(), position.getCharacter().getMoveRange());
+			} else {
+				surroundAction(position.getX(), position.getY(), position.getCharacter().getAttackRange());
+			}
+		} else if (!isFromSelf) {
+			System.out.println("Char not yours");
+		}
+	}
+
+
+	private void surroundAction(int x, int y, int range) {
+		this.guiBoard.surroundAction(x, y, range);
+	}
+
+	public void clickedBase(Position position) {
+		System.out.println("Clicked base at (" + position.getX() + ", " + position.getY() + ") of type " + position.getTile().toString());
+		
+		if (game.getPlayer().getMainBase().getX() == position.getX() && game.getPlayer().getMainBase().getY() == position.getY()) {
+			System.out.println("AND Position equals Player's main base.");
+		}
+		if (game.getOpponent().getMainBase().getX() == position.getX() && game.getOpponent().getMainBase().getY() == position.getY()) {
+			System.out.println("AND Position equals Opponents main base.");
+		}
+
+		// if (position.isObjective()) {
+			
+		// }
+	}
+
+	public void setIsCharacterSelected(boolean b) {
+		this.isCharacterSelected = b;
+	}
+
+	public void clickedGrass(Position position) {
+		if (this.isCharacterSelected) {
+			System.out.println("Character is selected, clicked grass");
+		}
+		this.guiBoard.cleanSelection();
+		this.isCharacterSelected = false;
+		this.game.getBoard().move(position, this.game.getBoard().getPosition(position.getX(), position.getY()));
+		// this.game.getBoard().getPosition(position.getX(), position.getY());
+	}
+
+	public void updateBoardGUI() {
+		System.out.println("Update board.");
+	}
+
+
 
 }

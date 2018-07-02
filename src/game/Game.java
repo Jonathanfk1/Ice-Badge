@@ -2,6 +2,7 @@ package game;
 
 import board.Position;
 
+import java.time.Year;
 import java.util.List;
 
 import board.Board;
@@ -41,10 +42,10 @@ public class Game {
 		return this.board.getPosition(x, y);
 	}
 
-	public void setBasesForPlayers() {
-		this.player.setMainBase(this.board.getSelfMainBase());
-		this.opponent.setMainBase(this.board.getOpponentMainBase());
-	}
+	// public void setBasesForPlayers() {
+	// 	this.player.setMainBase(this.board.getSelfMainBase());
+	// 	this.opponent.setMainBase(this.board.getOpponentMainBase());
+	// }
 
 	public Action selectPosition(Position clickedPosition) {
 		if (this.player.getSelectedPosition() == null)
@@ -128,6 +129,10 @@ public class Game {
 		this.board = new Board(game, i, j, this.player.getBoardSide());
 	}
 
+	public void createBoardWithSetPositions(Game game, int i, int j, Position[][] positions) {
+		this.board = new Board(game, i, j, this.player.getBoardSide(), positions);
+	}
+
 	public void openSelectCharacterMenu() {
 		this.control.openSelectCharacterMenu();
 	}
@@ -150,6 +155,10 @@ public class Game {
 
 	public void addSelectedCharacters(List<Character> selectedCharacters) {
 		player.addCharacters(selectedCharacters);
+	}
+
+	public void updateBoardGUI() {
+		this.control.updateBoardGUI();
 	}
 
 }

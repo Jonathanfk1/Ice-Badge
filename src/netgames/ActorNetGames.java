@@ -42,8 +42,10 @@ public class ActorNetGames implements OuvidorProxy {
 		this.control.setNetGamesPosition(posicao);
 		if (posicao == 1) {
 			this.isMyTurn = true;
+			// this.control.getGame().getPlayer().setId(1);
 		} else {
 			this.isMyTurn = false;
+			// this.control.getGame().getPlayer().setId(2);
 		}
 		this.control.setIsRoomStarted(true);
 	}
@@ -96,22 +98,41 @@ public class ActorNetGames implements OuvidorProxy {
 		} else if (jogada instanceof Message) {
 			message = (Message) jogada;
 
-			switch (message.getMessageType()) {
+				switch (message.getMessageType()) {
 				case PLAYER_READY:
 					if (!(this.control.getCurrentMenu() instanceof GUISelectCharacter)) {
 						this.control.openSelectCharacterMenu();
 					}
 					BoardSide opponentBoardSide = message.getPlayerBoardSide();
+					if (opponentBoardSide == BoardSide.DOWN) {
+						this.control.getGame().getOpponent().setBoardSide(opponentBoardSide);
+						this.control.getGame().getPlayer().setBoardSide(BoardSide.UP);
+					} if (opponentBoardSide == BoardSide.UP) 	{
+						this.control.getGame().getOpponent().setBoardSide(opponentBoardSide);
+						this.control.getGame().getPlayer().setBoardSide(BoardSide.DOWN);
+					}
 				break;
 				case START_GAME:
 
-					this.control.getGame().getOpponent().setCharactersList(message.getListOfCharacters());
-					this.control.getGame().getPlayer().setCharactersList(this.control.getSelectedCharacters());
-
 					if (this.control.getActorNetGames().getIsReadyToStart()) {
-						this.control.startPlayOverNet(!this.isMyTurn);
+						this.control.gameAboutToStart(message.getListOfCharacters());
+						this.control.createGame(this.isMyTurn);
+						this.control.openNewBoard();
+						Message openedBoardMessage = new Message(MessageType.OPENED_BOARD, this.control.getSelectedCharacters(), 
+						this.control.getGame().getBoard().getPositions());
+						this.control.getActorNetGames().sendMessage(openedBoardMessage);
+						// this.control.startPlayOverNet(!this.isMyTurn);
 					} else {
 						this.control.warnPlayerNotReady();
+					}
+				break;
+				case OPENED_BOARD:
+					if (this.control.getSelectCharacterGui() != null) {
+						if (this.control.getGuiBoard() == null) {
+							this.control.gameAboutToStart(message.getListOfCharacters());
+							this.control.createGameWithSetPositions(this.isMyTurn, message.getPositions());
+							this.control.openNewBoard();
+						}
 					}
 				break;
 				default:

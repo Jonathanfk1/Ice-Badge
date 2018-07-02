@@ -51,9 +51,9 @@ public class GUISelectCharacter extends JFrame {
 				if (e.getActionCommand() == "Ready") {
 					control.toggleIsReadyToStart();
 					updateReadyText();
-//					if (!control.areBothBoardSidesSet()) {
-//						control.getGame().getPlayer().setBoardSide(control.askForBoardSide());
-//					}
+					if (!control.areBothBoardSidesSet()) {
+						control.getGame().getPlayer().setBoardSide(control.askForBoardSide());
+					}
 					control.sendReadyToServer();	
 				}
 			}

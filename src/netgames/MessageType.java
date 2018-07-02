@@ -7,5 +7,6 @@ public enum MessageType implements Jogada {
     LIST_OF_CHARACTERS,
     PLAYER_READY,
     CHANGED_TURN,
-    TEXT;
+    TEXT,
+    OPENED_BOARD;
 }

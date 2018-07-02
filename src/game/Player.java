@@ -5,8 +5,9 @@ import java.util.List;
 
 import board.BoardSide;
 import board.Position;
+import br.ufsc.inf.leobr.cliente.Jogada;
 
-public class Player {
+public class Player implements Jogada {
 
 	protected String name;
 	protected boolean turn;
@@ -123,6 +124,15 @@ public class Player {
 
 	public boolean isBoardSideSet() {
 		return (this.boardSide != null);
+	}
+
+	public Character getCharacterByPosition(int x, int y) {
+		for (Character character : this.listOfCharacters) {
+			if (character.getPosition().getX() == x && character.getPosition().getY() == y) {
+				return character;
+			}
+		}
+		return null;
 	}
 
 }
