@@ -317,21 +317,36 @@ public class Board {
 		}
 	}
 
-	public void move(Position from, Position to) {
+	public void move(Character character, Position to) {
+		Position oldPosition = character.getPosition();
+		Position newPosition = new Position(to.getX(), to.getY(), character);
+		character.setPosition(newPosition);
+		this.positions[newPosition.getX()][newPosition.getY()] = newPosition;
+		this.positions[oldPosition.getX()][oldPosition.getY()] = new Position(oldPosition.getX(), oldPosition.getY(), TypeTile.GRASS);
 		
-		this.game.getPlayer().getCharacterByPosition(from.getCharacter().getPosition().getX(), from.getCharacter().getPosition().getY()).setPosition(to);
-		from.getCharacter().setPosition(to);
-		from.setCharacter(null);
-		from.setTile(TypeTile.GRASS);
-		from.isOccupied(false);
-		from.isObstacle(false);
-		to.isObstacle(true);
-		to.isOccupied(true);
+		// character.getPosition().setCharacter(null);
+		// character.getPosition().setTile(TypeTile.GRASS);
+		// character.getPosition().isOccupied(false);
+		// character.getPosition().isObstacle(false);
+		// character.setPosition(to);
+		// to.isObstacle(true);
+		// to.isOccupied(true);
 		this.updateBoardGUI();
 	}
 
 	private void updateBoardGUI() {
 		this.game.updateBoardGUI();
 	}
+
+	public void removeDeadCharacter(Character opponentPositionCharacter) {
+		Position oldPosition = opponentPositionCharacter.getPosition();
+		this.positions[oldPosition.getX()][oldPosition.getY()] = new Position(oldPosition.getX(), oldPosition.getY(), TypeTile.TOMBSTONE);
+		this.game.getOpponent().removeCharacter(opponentPositionCharacter);;
+	}
+
+	public void setPositions(Position[][] positions) {
+		this.positions = positions;
+	}
+
 
 }

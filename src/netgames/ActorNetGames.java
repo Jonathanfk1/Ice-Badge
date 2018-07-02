@@ -3,6 +3,7 @@ package netgames;
 import javax.swing.JOptionPane;
 
 import board.BoardSide;
+import board.Position;
 import br.ufsc.inf.leobr.cliente.Jogada;
 import br.ufsc.inf.leobr.cliente.OuvidorProxy;
 import br.ufsc.inf.leobr.cliente.Proxy;
@@ -134,6 +135,11 @@ public class ActorNetGames implements OuvidorProxy {
 							this.control.openNewBoard();
 						}
 					}
+				break;
+				case CHANGED_TURN: 
+					Position[][] newPositions = message.getPositions();
+					this.isMyTurn = !this.isMyTurn;
+					this.control.setNewPositions(newPositions);
 				break;
 				default:
 				break;

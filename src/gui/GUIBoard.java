@@ -35,11 +35,15 @@ public class GUIBoard extends JFrame {
 	private ImageIcon cleric1Icon;
 	private ImageIcon bardIcon;
 	private JButton[][] buttonsMap;
+	private ImageIcon tombstoneIcon;
+	private JButton sendPlay;
+
 
 	public GUIBoard(Control control) {
 		super();
 		this.control = control;
 		this.board = control.getGame().getBoard();
+		this.sendPlay = null;
 		this.buttonsMap = new JButton[this.control.getGame().getBoard().getRowSize()][this.control.getGame().getBoard().getColumnSize()];
 
 		this.setFrame();
@@ -78,7 +82,7 @@ public class GUIBoard extends JFrame {
 
 		this.lowerPanel = new JPanel();
 		// this.upperPanel.setSize(new Dimension(500, 500));
-		this.lowerPanel.setBackground(Color.PINK);
+		this.lowerPanel.setBackground(Color.GRAY);
         this.lowerPanel.setLayout(new GridLayout(1, 3));
 		this.lowerPanel.setPreferredSize(new Dimension(200, 60));
 		
@@ -110,6 +114,10 @@ public class GUIBoard extends JFrame {
 		rockIcon.setImage(rockIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
 		this.rockIcon = rockIcon;
 
+		ImageIcon tombstoneIcon = new ImageIcon("resources/tombstoneTile1.png");
+		tombstoneIcon.setImage(tombstoneIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
+		this.tombstoneIcon = tombstoneIcon;
+
 		ImageIcon archerWarriorIcon = new ImageIcon("resources/warriorTile.png");
 		archerWarriorIcon.setImage(archerWarriorIcon.getImage().getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH));
 		this.archerWarriorIcon = archerWarriorIcon;
@@ -128,10 +136,23 @@ public class GUIBoard extends JFrame {
 
 	}
 
+	public void removeButtons() {
+		this.upperPanel.removeAll();
+		for (int i = 0; i < board.getRowSize(); i++) {
+			for (int j = 0; j < board.getColumnSize(); j++) {
+				buttonsMap[i][j] = null;
+			}			
+		}
+	}
+
+	public void revalidateGUI() {
+		this.upperPanel.revalidate();
+		this.upperPanel.repaint();
+	}
+
 	public Board setBoard() {
 
 		// this.updateMap();
-
 		for (int i = 0; i < board.getRowSize(); i++) {
 			for (int j = 0; j < board.getColumnSize(); j++) {
 				JButton tile = new JButton();
@@ -214,6 +235,22 @@ public class GUIBoard extends JFrame {
 							public void actionPerformed(ActionEvent e) {
 								if (e.getActionCommand() == "tree") {
 									System.out.println("clicked tree");
+									cleanSelection();
+								}
+							}
+						});
+						this.upperPanel.add(tile);
+						System.out.println("Added tile of type: " + control.getGame().getBoard().getPositions()[i][j].getTile().toString()
+						+ " to position " + i + " , " + j);
+					break;
+					case TOMBSTONE:
+						tile.setIcon(this.tombstoneIcon);
+						tile.setActionCommand("tombstone");
+						tile.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								if (e.getActionCommand() == "tombstone") {
+									System.out.println("clicked tombstone");
 									cleanSelection();
 								}
 							}
@@ -363,6 +400,7 @@ public class GUIBoard extends JFrame {
 					if (this.control.getGame().getBoard().getPositions()[i][j].isObstacle()) {
 						this.buttonsMap[i][j].setContentAreaFilled(false);
 					}
+					game.Character selectedCharacter = this.control.getGame().getBoard().getPosition(i, j).getCharacter();
 					if (this.control.getGame().getBoard().getPosition(i, j).getCharacter() != null 
 					|| this.control.getGame().getBoard().getPosition(i, j).isOccupied()) {
 						if (this.control.getGame().getBoard().getPosition(i, j).getCharacter().getOwner() == this.control.getGame().getPlayer()) {
@@ -387,27 +425,44 @@ public class GUIBoard extends JFrame {
 		}
 	}
 
-	private void updateBoard() {
-		
+	private void updatePosition(int x, int y) {
+		buttonsMap[x][y].setIcon(this.grassIcon);
+		buttonsMap[x][y].setActionCommand("grass");
+		final int innerIg = x;
+		final int innerJg = y;
+		buttonsMap[x][y].addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getActionCommand() == "grass") {
+					System.out.println("clicked grass");
+					cleanSelection();
+					control.clickedGrass(control.getGame().getPosition(innerIg, innerJg));
+				}
+			}
+		});
+		this.buttonsMap[x][y].repaint();
+		this.upperPanel.repaint();
 	}
 
 	private void setButtons() {
-		JButton sendPlay = new JButton("Send play");
-		sendPlay.setPreferredSize(new Dimension(40, 30));
-		sendPlay.setContentAreaFilled(true);
-		sendPlay.setBackground(Color.GRAY);
-		sendPlay.setActionCommand("LaunchAction");
-		sendPlay.addActionListener(new ActionListener() {
+		this.sendPlay = new JButton("Send play");
+		this.sendPlay.setPreferredSize(new Dimension(40, 30));
+		this.sendPlay.setContentAreaFilled(true);
+		this.sendPlay.setBackground(Color.GRAY);
+		this.sendPlay.setActionCommand("LaunchAction");
+		this.sendPlay.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand() == "LaunchAction") {
 					System.out.println("LaunchAction button clicked");
+					control.launchPlay();
 				}
 			}
 		});
-		this.lowerPanel.add(sendPlay, BorderLayout.EAST);
+		this.sendPlay.setVisible(false);
+		this.lowerPanel.add(this.sendPlay, BorderLayout.EAST);
 	}
-
+	
 	public void tellTurn(boolean turn) { 
 		if (turn) {
 			JOptionPane.showMessageDialog(this, "It's your turn.");		
@@ -415,6 +470,7 @@ public class GUIBoard extends JFrame {
 			JOptionPane.showMessageDialog(this, "Wait for opponent to move.");
 		}
 	}
+
 
 	public int askForAction() {
 		Object[] actions = {"MOVE",
@@ -428,6 +484,22 @@ public class GUIBoard extends JFrame {
 			actions,
 			actions[1]);
 			return chosenAction;
+	}
+
+	public void warnAlreadyMoved() {
+		JOptionPane.showMessageDialog(this, "Already moved this turn.", "Move not available", JOptionPane.WARNING_MESSAGE);
+	}
+
+	public void playDone() {
+		this.sendPlay.setVisible(true);
+	}
+
+	public void warnAlreadyAttacked() {
+		JOptionPane.showMessageDialog(this, "Already attacked this turn.", "Attack not available", JOptionPane.WARNING_MESSAGE);
+	}
+
+	public void warnGameIsOver() {
+		JOptionPane.showMessageDialog(this, "You win the game.", "Game won!", JOptionPane.PLAIN_MESSAGE);
 	}
 
 }

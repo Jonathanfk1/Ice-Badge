@@ -36,6 +36,11 @@ public class Control {
 	protected boolean isRoomStarted;
 	protected boolean isReadyToStart;
 	protected boolean isCharacterSelected;
+	protected Character selectedCharacter;
+	protected boolean playerHasMoved;
+	protected boolean playerHasAttacked;
+	protected boolean isMoving;
+	protected boolean isAttacking;
 
 	public Control() {
 		this.actorNetGames = new ActorNetGames(this);
@@ -52,6 +57,10 @@ public class Control {
 		this.isConnected = false;
 		this.isRoomStarted = false;
 		this.isReadyToStart = false;
+		this.isCharacterSelected = false;
+		this.selectedCharacter = null;
+		this.playerHasMoved = false;
+		this.playerHasAttacked = false;
 	}
 
 	public void disconnect() {
@@ -351,18 +360,41 @@ public class Control {
 		for (Character character : this.game.getPlayer().getCharactersList()) {
 			if (character.getPosition().getX() == position.getX() && character.getPosition().getY() == position.getY()) {
 				isFromSelf = true;
+				this.selectedCharacter = character;
+				this.isCharacterSelected = true;
 			}
 		}
 		if (isFromSelf) {
-			this.isCharacterSelected = true;
 			int action = this.guiBoard.askForAction();
 			if (action == 0) {
 				surroundAction(position.getX(), position.getY(), position.getCharacter().getMoveRange());
+				this.isMoving = true;
 			} else {
 				surroundAction(position.getX(), position.getY(), position.getCharacter().getAttackRange());
+				this.isAttacking = true;
 			}
 		} else if (!isFromSelf) {
-			System.out.println("Char not yours");
+			System.out.println("Opponent's char clicked.");
+			Position opponentPosition = this.game.getBoard().getPosition(position.getX(), position.getY());
+			Character opponentPositionCharacter = opponentPosition.getCharacter();
+			if (this.playerHasAttacked) {
+				this.guiBoard.warnAlreadyAttacked();
+			} else {
+				this.isAttacking = true;
+				if (selectedCharacter.attack(opponentPositionCharacter) == 0) {
+					this.game.getBoard().removeDeadCharacter(opponentPositionCharacter);
+					System.out.println("Removing character...");
+					updateBoardGUI();
+				} else {
+					System.out.println("Char is still alive with " + opponentPositionCharacter.getLife() + " of life.");
+				}
+				this.playerHasAttacked = true;
+				this.guiBoard.cleanSelection();
+				this.selectedCharacter = null;
+				this.isCharacterSelected = false;
+				this.isMoving = false;
+				this.isAttacking = false;
+			}
 		}
 	}
 
@@ -379,11 +411,11 @@ public class Control {
 		}
 		if (game.getOpponent().getMainBase().getX() == position.getX() && game.getOpponent().getMainBase().getY() == position.getY()) {
 			System.out.println("AND Position equals Opponents main base.");
+			if (this.isAttacking || this.isMoving) {
+				this.guiBoard.warnGameIsOver();
+			}
 		}
 
-		// if (position.isObjective()) {
-			
-		// }
 	}
 
 	public void setIsCharacterSelected(boolean b) {
@@ -393,15 +425,47 @@ public class Control {
 	public void clickedGrass(Position position) {
 		if (this.isCharacterSelected) {
 			System.out.println("Character is selected, clicked grass");
+			if (this.isMoving) {
+				if (!this.playerHasMoved) {
+					this.game.getBoard().move(this.selectedCharacter, this.game.getBoard().getPosition(position.getX(), position.getY()));
+					this.playerHasMoved = true;
+				} else {
+					System.out.println("Player already moved");
+					this.guiBoard.warnAlreadyMoved();
+				}
+			}
+			validateAllActionsDone();
+			this.guiBoard.cleanSelection();
+			this.selectedCharacter = null;
+			this.isCharacterSelected = false;
+			this.isMoving = false;
+			this.isAttacking = false;
 		}
-		this.guiBoard.cleanSelection();
-		this.isCharacterSelected = false;
-		this.game.getBoard().move(position, this.game.getBoard().getPosition(position.getX(), position.getY()));
-		// this.game.getBoard().getPosition(position.getX(), position.getY());
+	}
+
+	public void validateAllActionsDone() {
+		if (playerHasMoved && playerHasAttacked) {
+			this.guiBoard.playDone();
+			this.playerHasAttacked = false;
+			this.playerHasMoved = false;
+		}
 	}
 
 	public void updateBoardGUI() {
 		System.out.println("Update board.");
+		this.guiBoard.removeButtons();
+		this.guiBoard.setBoard();
+		this.guiBoard.revalidateGUI();
+	}
+
+	public void launchPlay() {
+		Message play = new Message(MessageType.CHANGED_TURN, this.getGame().getBoard().getPositions());
+		this.actorNetGames.sendMessage(play);
+	}
+
+	public void setNewPositions(Position[][] newPositions) {
+		this.game.getBoard().setPositions(newPositions);
+		this.updateBoardGUI();
 	}
 
 

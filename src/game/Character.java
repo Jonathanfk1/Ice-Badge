@@ -35,6 +35,22 @@ public class Character implements Jogada {
 		this.owner = null;
 	}
 	
+	public int attack(Character opponentPositionCharacter) {
+		return opponentPositionCharacter.getAttacked(this);
+	}
+
+	public int getAttacked(Character attackant) {
+		this.lifeValue = this.lifeValue - attackant.getAttackDamage();
+
+		if (this.lifeValue <= 0) {
+			System.out.println("Char killed");
+			// this.owner.getCharactersList().remove(this);
+		} else {
+			return this.lifeValue;
+		}
+		return 0;
+	}
+
 	public int getLife() {
 		return this.lifeValue;
 	}
@@ -47,7 +63,7 @@ public class Character implements Jogada {
 		return this.movedThisTurn;
 	}
 
-	public boolean getAttacked() {
+	public boolean getAttackedThisTurn() {
 		return this.attackedThisTurn;
 	}
 
@@ -73,6 +89,10 @@ public class Character implements Jogada {
 
 	public int getAttackRange() {
 		return this.attackRange;
+	}
+
+	public int getAttackDamage() {
+		return this.attackDamage;
 	}
 
 }
