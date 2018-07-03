@@ -100,10 +100,6 @@ public class Control {
 		}
 	}
 
-	public void startPlayOverNet(boolean startsPlaying) {
-		this.actorPlayer.startPlayOverNet(startsPlaying);
-	}
-
 	public String findOpponentName() {
 		return this.actorNetGames.askForOpponentName();
 	}
@@ -242,7 +238,7 @@ public class Control {
 	}
 
 	public void sendStartGameMessage() {
-		Message message = new Message(MessageType.START_GAME, this.getSelectedCharacters());
+		Message message = new Message(MessageType.BEGIN_GAME, this.getSelectedCharacters());
 		this.actorNetGames.sendMessage(message);
 	}
 	
@@ -259,6 +255,7 @@ public class Control {
 	}
 
 	public void sendReadyToServer() {
+		pressedReady();
 		this.game.getPlayer().setCharactersList(this.selectedCharacters);
 		Message message = new Message(MessageType.PLAYER_READY, this.getGame().getPlayer().getBoardSide());
 		this.actorNetGames.sendMessage(message);	
@@ -466,6 +463,14 @@ public class Control {
 
 	public GUIBoard getGuiBoard() {
 		return this.guiBoard;
+	}
+
+	public void pressedReady() {
+		toggleIsReadyToStart();
+		this.guiSelectCharacter.updateReadyText();
+		if (!areBothBoardSidesSet()) {
+			this.game.getPlayer().setBoardSide(askForBoardSide());
+		}
 	}
 
 

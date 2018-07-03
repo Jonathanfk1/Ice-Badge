@@ -53,12 +53,7 @@ public class GUISelectCharacter extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand() == "Ready") {
-					control.toggleIsReadyToStart();
-					updateReadyText();
-					if (!control.areBothBoardSidesSet()) {
-						control.getGame().getPlayer().setBoardSide(control.askForBoardSide());
-					}
-					control.sendReadyToServer();	
+					actorPlayer.sendReadyToServer();
 				}
 			}
 		});
@@ -176,7 +171,7 @@ public class GUISelectCharacter extends JFrame {
 		
 	}
 
-	private void updateReadyText() {
+	public void updateReadyText() {
 		boolean shouldBeVisible = this.control.getActorNetGames().getIsReadyToStart();
 		this.isReadyToStart.setVisible(shouldBeVisible);
 		this.startGameButton.setVisible(shouldBeVisible);

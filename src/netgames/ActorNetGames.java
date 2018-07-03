@@ -113,16 +113,15 @@ public class ActorNetGames implements OuvidorProxy {
 						this.control.getGame().getPlayer().setBoardSide(BoardSide.DOWN);
 					}
 				break;
-				case START_GAME:
+				case BEGIN_GAME:
 
-					if (this.control.getActorNetGames().getIsReadyToStart()) {
+					if (this.isReadyToStart) {
 						this.control.gameAboutToStart(message.getListOfCharacters());
 						this.control.createGame(this.isMyTurn);
 						this.control.openNewBoard();
 						Message openedBoardMessage = new Message(MessageType.OPENED_BOARD, this.control.getSelectedCharacters(), 
 						this.control.getGame().getBoard().getPositions());
 						this.control.getActorNetGames().sendMessage(openedBoardMessage);
-						// this.control.startPlayOverNet(!this.isMyTurn);
 					} else {
 						this.control.warnPlayerNotReady();
 					}

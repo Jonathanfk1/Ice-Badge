@@ -27,8 +27,8 @@ public class ActorPlayer extends Player {
         this.control.sendStartGameMessage();
     }
 
-	public void startPlayOverNet(boolean iStartPlaying) {
-        this.control.createGame(iStartPlaying); 
+    public void sendReadyToServer() {
+        this.control.sendReadyToServer();
     }
 
 }
