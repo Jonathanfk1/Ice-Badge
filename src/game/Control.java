@@ -267,7 +267,7 @@ public class Control {
 			Character opponentCharacter = opponentPosition.getCharacter();
 			if (this.playerHasAttacked) {
 				this.guiBoard.warnAlreadyAttacked();
-				this.guiBoard.cleanSelection();
+				this.guiBoard.clearSelection();
 			} else {
 				if (selectedCharacter.attack(opponentCharacter) == 0) {
 					this.game.getBoard().removeDeadCharacter(opponentCharacter);
@@ -280,7 +280,7 @@ public class Control {
 				this.actorNetGames.sendAction(action);
 				this.lastActions.add(action);
 				this.playerHasAttacked = true;
-				this.guiBoard.cleanSelection();
+				this.guiBoard.clearSelection();
 				this.selectedCharacter = null;
 				this.isCharacterSelected = false;
 				this.isMoving = false;
@@ -324,17 +324,17 @@ public class Control {
 				if (!this.playerHasMoved) {
 					this.game.getBoard().move(this.selectedCharacter, this.game.getBoard().getPosition(position.getX(), position.getY()));
 					this.playerHasMoved = true;
-					Position newPosition = new Position(position.getX(), position.getY());
-					Action action = new Action(this.selectedCharacter, newPosition);
+					Position newGrassPosition = new Position(position.getX(), position.getY());
+					Action action = new Action(this.selectedCharacter, newGrassPosition);
 					this.lastActions.add(action);
 				} else {
 					System.out.println("Player already moved");
 					this.guiBoard.warnAlreadyMoved();
-					this.guiBoard.cleanSelection();
+					this.guiBoard.clearSelection();
 				}
 			}
-			validateAllActionsDone();
-			this.guiBoard.cleanSelection();
+			// validateAllActionsDone();
+			this.guiBoard.clearSelection();
 			this.selectedCharacter = null;
 			this.isCharacterSelected = false;
 			this.isMoving = false;
@@ -358,6 +358,7 @@ public class Control {
 		this.actorNetGames.sendMessage(play);
 		this.playerHasAttacked = false;
 		this.playerHasMoved = false;
+		this.setPlayerTurn(false);
 		this.lastActions.clear();
 	}
 
@@ -452,6 +453,11 @@ public class Control {
 
 	public GUIBoard getGuiBoard() {
 		return this.guiBoard;
+	}
+
+	public void setPlayerTurn(boolean b) {
+		this.game.getPlayer().setTurn(b);
+		this.game.getOpponent().setTurn(!b);
 	}
 
 }

@@ -143,7 +143,7 @@ public class ActorNetGames implements OuvidorProxy {
 				break;
 				case CHANGED_TURN: 
 					Position[][] newPositions = message.getPositions();
-					this.isMyTurn = !this.isMyTurn;
+					this.control.setPlayerTurn(true);
 					this.control.setNewPositions(newPositions);
 				break;
 				case GAME_OVER:

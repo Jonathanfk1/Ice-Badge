@@ -174,7 +174,7 @@ public class GUIBoard extends JFrame {
 							public void actionPerformed(ActionEvent e) {
 								if (e.getActionCommand() == "grass") {
 									System.out.println("clicked grass");
-									cleanSelection();
+									clearSelection();
 									control.clickedGrass(control.getGame().getPosition(innerIg, innerJg));
 								}
 							}
@@ -191,7 +191,7 @@ public class GUIBoard extends JFrame {
 							public void actionPerformed(ActionEvent e) {
 								if (e.getActionCommand() == "water") {
 									System.out.println("clicked water");
-									cleanSelection();
+									clearSelection();
 								}
 							}
 						});
@@ -207,7 +207,7 @@ public class GUIBoard extends JFrame {
 							public void actionPerformed(ActionEvent e) {
 								if (e.getActionCommand() == "mountain") {
 									System.out.println("clicked mountain");
-									cleanSelection();
+									clearSelection();
 								}
 							}
 						});
@@ -223,7 +223,7 @@ public class GUIBoard extends JFrame {
 							public void actionPerformed(ActionEvent e) {
 								if (e.getActionCommand() == "rock") {
 									System.out.println("clicked rock");
-									cleanSelection();
+									clearSelection();
 								}
 							}
 						});
@@ -239,7 +239,7 @@ public class GUIBoard extends JFrame {
 							public void actionPerformed(ActionEvent e) {
 								if (e.getActionCommand() == "tree") {
 									System.out.println("clicked tree");
-									cleanSelection();
+									clearSelection();
 								}
 							}
 						});
@@ -255,7 +255,7 @@ public class GUIBoard extends JFrame {
 							public void actionPerformed(ActionEvent e) {
 								if (e.getActionCommand() == "tombstone") {
 									System.out.println("clicked tombstone");
-									cleanSelection();
+									clearSelection();
 								}
 							}
 						});
@@ -274,7 +274,7 @@ public class GUIBoard extends JFrame {
 									if (e.getActionCommand() == "main_base") {
 										System.out.println("clicked main base");
 										control.clickedBase(control.getGame().getPosition(innerIb, innerJb));
-										cleanSelection();
+										clearSelection();
 									}
 								}
 							});
@@ -368,7 +368,7 @@ public class GUIBoard extends JFrame {
 	}
 
 	public void surroundAction(int x, int y, int range) {
-		cleanSelection();
+		clearSelection();
 
 		int matrixInitX = x-range;
 		int matrixInitY = y-range;
@@ -421,7 +421,7 @@ public class GUIBoard extends JFrame {
 		}
 	}
 
-	public void cleanSelection() {
+	public void clearSelection() {
 		for (int i = 0; i < this.control.getGame().getBoard().getRowSize(); i++) {
 			for (int j = 0; j < this.control.getGame().getBoard().getColumnSize(); j++) {
 				this.buttonsMap[i][j].setContentAreaFilled(false);
@@ -439,7 +439,7 @@ public class GUIBoard extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand() == "grass") {
 					System.out.println("clicked grass");
-					cleanSelection();
+					clearSelection();
 					control.clickedGrass(control.getGame().getPosition(innerIg, innerJg));
 				}
 			}
