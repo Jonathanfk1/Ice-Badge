@@ -15,8 +15,16 @@ public class ActorPlayer extends Player {
         this.control.connectToNetGames();
     }
 
+    public void askToDisconnect() {
+        this.control.disconnectFromNetGames();
+    }
+
     public void askToStartRoom() {
         this.control.askToStartRoom();
+    }
+
+    public void sendStartGameMessage() {
+        this.control.sendStartGameMessage();
     }
 
 	public void startPlayOverNet(boolean iStartPlaying) {

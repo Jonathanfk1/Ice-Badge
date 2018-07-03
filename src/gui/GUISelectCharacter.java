@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+import actors.ActorPlayer;
 import game.Control;
 import game.TypeCharacter;
 
@@ -27,12 +28,15 @@ public class GUISelectCharacter extends JFrame {
 	protected JTextArea selectedCharactersText;
 	protected JTextArea isReadyToStart;
 	protected GridBagConstraints buttonsGbc;
+	protected ActorPlayer actorPlayer;
 
-	public GUISelectCharacter(Control control, JFrame parent) {
+	public GUISelectCharacter(Control control, JFrame parent, ActorPlayer actorPlayer) {
 		this.control = control;
 		this.parent = parent;
 		this.panel = new JPanel();
 		this.buttonsGbc = new GridBagConstraints();
+		this.actorPlayer = actorPlayer;
+
 		this.setFrame();
 		this.setButtons();
 		this.setStartButton();
@@ -71,7 +75,7 @@ public class GUISelectCharacter extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand() == "Begin Game") {
-					control.sendStartGameMessage();
+					actorPlayer.sendStartGameMessage();
 				}
 			}
 		});

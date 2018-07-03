@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+import actors.ActorPlayer;
 import game.Control;
 
 public class GUIMainMenu extends JFrame {
@@ -23,10 +24,12 @@ public class GUIMainMenu extends JFrame {
 	protected JTextArea connectedText;
 	protected JTextArea roomStartedText;
 	protected String playerName;
+	protected ActorPlayer actorPlayer;
 
-	public GUIMainMenu(Control control) {
+	public GUIMainMenu(Control control, ActorPlayer actorPlayer) {
 		this.control = control;
 		this.panel = new JPanel();
+		this.actorPlayer = actorPlayer;
 
 		this.setFrame();
 		this.setButtons();
@@ -94,7 +97,7 @@ public class GUIMainMenu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand() == "CONNECT") {
-					control.connectToNetGames();
+					actorPlayer.askToConnect();
 				}
 			}
 		});
@@ -107,7 +110,7 @@ public class GUIMainMenu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand() == "DISCONNECT") {
-					control.disconnect();;
+					actorPlayer.askToDisconnect();
 				}
 			}
 		});
@@ -122,7 +125,7 @@ public class GUIMainMenu extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand() == "START GAME") {
-					control.askToStartRoom();
+					actorPlayer.askToStartRoom();
 				}
 
 			}

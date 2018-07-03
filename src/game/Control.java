@@ -46,7 +46,7 @@ public class Control {
 		this.actorNetGames = new ActorNetGames(this);
 		this.actorPlayer = new ActorPlayer(this);
 		this.game = new Game(this);
-		this.guiMainMenu = new GUIMainMenu(this);
+		this.guiMainMenu = new GUIMainMenu(this, this.actorPlayer);
 		this.currentMenu = this.guiMainMenu;
 		this.guiSelectCharacter = null;
 		this.guiBoard = null;
@@ -63,7 +63,7 @@ public class Control {
 		this.playerHasAttacked = false;
 	}
 
-	public void disconnect() {
+	public void disconnectFromNetGames() {
 		this.actorNetGames.disconnect();
 		this.setIsRoomStarted(false);
 		this.setIsConnected(false);
@@ -212,9 +212,8 @@ public class Control {
 		}
 	}
 
-
 	public void openSelectCharacterMenu() {
-		this.guiSelectCharacter = new GUISelectCharacter(this, this.guiMainMenu);
+		this.guiSelectCharacter = new GUISelectCharacter(this, this.guiMainMenu, this.actorPlayer);
 		this.currentMenu = this.guiSelectCharacter;
 	}
 
@@ -246,16 +245,16 @@ public class Control {
 		Message message = new Message(MessageType.START_GAME, this.getSelectedCharacters());
 		this.actorNetGames.sendMessage(message);
 	}
+	
+	public void setIsRoomStarted(boolean roomStarted) {
+		this.isRoomStarted = roomStarted;
+		this.guiMainMenu.setRoomStartedText(this.isRoomStarted);
+		this.guiMainMenu.update(this.guiMainMenu.getGraphics());
+	}
 
 	public void setIsConnected(boolean connected) {
 		this.isConnected = connected;
 		this.guiMainMenu.setConnectedText(this.isConnected);
-		this.guiMainMenu.update(this.guiMainMenu.getGraphics());
-	}
-
-	public void setIsRoomStarted(boolean roomStarted) {
-		this.isRoomStarted = roomStarted;
-		this.guiMainMenu.setRoomStartedText(this.isRoomStarted);
 		this.guiMainMenu.update(this.guiMainMenu.getGraphics());
 	}
 
@@ -286,72 +285,6 @@ public class Control {
 	}
 
 
-	// > GETTERS AND SETTERS
-
-	// > > EXTERNAL
-
-	public void setOpponentsCharacters(List<Character> listOfCharacters) {
-		this.getGame().getOpponent().setCharactersList(listOfCharacters);
-	}
-
-	public boolean areBothBoardSidesSet() {
-		return ((this.getGame().getPlayer().getBoardSide() != null)
-		&& (this.getGame().getOpponent().getBoardSide() != null));
-	}
-
-	// > > INTERNAL
-
-	public void setGame(Game game) {
-		this.game = game;
-	}
-
-	public Game getGame() {
-		return this.game;
-	}
-
-	public ActorPlayer getActorPlayer() {
-		return this.actorPlayer;
-	}
-
-	public List<Character> getSelectedCharacters() {
-		return this.selectedCharacters;
-	}
-
-	public JFrame getCurrentMenu() {
-		return this.currentMenu;
-	}
-
-	public void setCurrentMenu(JFrame menu) {
-		this.currentMenu = menu;
-	}
-
-	public void setNetGamesPosition(Integer posicao) {
-		this.netGamesPosition = posicao;
-	}
-
-	public void setGuiBoard(GUIBoard guiBoard) {
-		this.guiBoard = guiBoard;
-	}
-
-	public void setGuiMainMenu(GUIMainMenu guiMainMenu) {
-		this.guiMainMenu = guiMainMenu;
-	}
-
-	public GUISelectCharacter getSelectCharacterGui() {
-		return this.guiSelectCharacter;
-	}
-
-	public void setGuiSelectCharacter(GUISelectCharacter guiSelectCharacter) {
-		this.guiSelectCharacter = guiSelectCharacter;
-	}
-
-	public void setIsReadyToStart(boolean isReadyToStart) {
-		this.isReadyToStart = isReadyToStart;
-	}
-
-	public GUIBoard getGuiBoard() {
-		return this.guiBoard;
-	}
 
 	public void clickedCharacter(Position position) {
 		System.out.println("Clicked Character of position (" + position.getX() + ", " +  position.getY() 
@@ -468,6 +401,72 @@ public class Control {
 		this.updateBoardGUI();
 	}
 
+	// > GETTERS AND SETTERS
+
+	// > > EXTERNAL
+
+	public void setOpponentsCharacters(List<Character> listOfCharacters) {
+		this.getGame().getOpponent().setCharactersList(listOfCharacters);
+	}
+
+	public boolean areBothBoardSidesSet() {
+		return ((this.getGame().getPlayer().getBoardSide() != null)
+		&& (this.getGame().getOpponent().getBoardSide() != null));
+	}
+
+	// > > INTERNAL
+
+	public void setGame(Game game) {
+		this.game = game;
+	}
+
+	public Game getGame() {
+		return this.game;
+	}
+
+	public ActorPlayer getActorPlayer() {
+		return this.actorPlayer;
+	}
+
+	public List<Character> getSelectedCharacters() {
+		return this.selectedCharacters;
+	}
+
+	public JFrame getCurrentMenu() {
+		return this.currentMenu;
+	}
+
+	public void setCurrentMenu(JFrame menu) {
+		this.currentMenu = menu;
+	}
+
+	public void setNetGamesPosition(Integer posicao) {
+		this.netGamesPosition = posicao;
+	}
+
+	public void setGuiBoard(GUIBoard guiBoard) {
+		this.guiBoard = guiBoard;
+	}
+
+	public void setGuiMainMenu(GUIMainMenu guiMainMenu) {
+		this.guiMainMenu = guiMainMenu;
+	}
+
+	public GUISelectCharacter getSelectCharacterGui() {
+		return this.guiSelectCharacter;
+	}
+
+	public void setGuiSelectCharacter(GUISelectCharacter guiSelectCharacter) {
+		this.guiSelectCharacter = guiSelectCharacter;
+	}
+
+	public void setIsReadyToStart(boolean isReadyToStart) {
+		this.isReadyToStart = isReadyToStart;
+	}
+
+	public GUIBoard getGuiBoard() {
+		return this.guiBoard;
+	}
 
 
 }
