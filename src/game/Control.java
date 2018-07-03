@@ -225,7 +225,7 @@ public class Control {
 	}
 
 	public void openNewBoard() {
-		this.guiBoard = new GUIBoard(this);
+		this.guiBoard = new GUIBoard(this, actorPlayer);
 	}
 	
 	public void gameAboutToStart(List<Character> listOfOpponentCharacters) {
@@ -264,19 +264,19 @@ public class Control {
 		} else if (!isFromSelf) {
 			System.out.println("Opponent's char clicked.");
 			Position opponentPosition = this.game.getBoard().getPosition(position.getX(), position.getY());
-			Character opponentPositionCharacter = opponentPosition.getCharacter();
+			Character opponentCharacter = opponentPosition.getCharacter();
 			if (this.playerHasAttacked) {
 				this.guiBoard.warnAlreadyAttacked();
 				this.guiBoard.cleanSelection();
 			} else {
-				if (selectedCharacter.attack(opponentPositionCharacter) == 0) {
-					this.game.getBoard().removeDeadCharacter(opponentPositionCharacter);
+				if (selectedCharacter.attack(opponentCharacter) == 0) {
+					this.game.getBoard().removeDeadCharacter(opponentCharacter);
 					System.out.println("Removing character...");
 					updateBoardGUI();
 				} else {
-					System.out.println("Char is still alive with " + opponentPositionCharacter.getLife() + " of life.");
+					System.out.println("Char is still alive with " + opponentCharacter.getLife() + " of life.");
 				}
-				Action action = new Action(this.selectedCharacter, opponentPositionCharacter);
+				Action action = new Action(this.selectedCharacter, opponentCharacter);
 				this.actorNetGames.sendAction(action);
 				this.lastActions.add(action);
 				this.playerHasAttacked = true;
@@ -354,7 +354,7 @@ public class Control {
 	}
 
 	public void launchPlay() {
-		Message play = new Message(MessageType.CHANGED_TURN, this.getGame().getBoard().getPositions());
+		Message play = new Message(MessageType.CHANGED_TURN, this.game.getBoard().getPositions());
 		this.actorNetGames.sendMessage(play);
 		this.playerHasAttacked = false;
 		this.playerHasMoved = false;

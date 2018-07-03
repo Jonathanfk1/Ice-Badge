@@ -31,4 +31,8 @@ public class ActorPlayer extends Player {
         this.control.sendReadyToServer();
     }
 
+    public void launchPlay() {
+        this.control.launchPlay();
+    }
+
 }

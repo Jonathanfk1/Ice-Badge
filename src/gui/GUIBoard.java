@@ -15,6 +15,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import actors.ActorPlayer;
  
 public class GUIBoard extends JFrame {
 
@@ -37,14 +39,16 @@ public class GUIBoard extends JFrame {
 	private JButton[][] buttonsMap;
 	private ImageIcon tombstoneIcon;
 	private JButton sendPlay;
+	protected ActorPlayer actorPlayer;
 
 
-	public GUIBoard(Control control) {
+	public GUIBoard(Control control, ActorPlayer actorPlayer) {
 		super();
 		this.control = control;
 		this.board = control.getGame().getBoard();
 		this.sendPlay = null;
 		this.buttonsMap = new JButton[this.control.getGame().getBoard().getRowSize()][this.control.getGame().getBoard().getColumnSize()];
+		this.actorPlayer = actorPlayer;
 
 		this.setFrame();
 		this.setPanel();
@@ -455,7 +459,7 @@ public class GUIBoard extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand() == "LaunchAction") {
 					System.out.println("LaunchAction button clicked");
-					control.launchPlay();
+					actorPlayer.launchPlay();
 				}
 			}
 		});
