@@ -249,13 +249,17 @@ public class Control {
 			}
 		}
 		if (isFromSelf) {
-			int action = this.guiBoard.askForAction();
-			if (action == 0) {
-				surroundAction(position.getX(), position.getY(), position.getCharacter().getMoveRange());
-				this.isMoving = true;
+			if (this.playerHasAttacked && this.playerHasMoved) {
+				this.guiBoard.warnOutOfActions();
 			} else {
-				surroundAction(position.getX(), position.getY(), position.getCharacter().getAttackRange());
-				this.isAttacking = true;
+				int action = this.guiBoard.askForAction();
+				if (action == 0) {
+					surroundAction(position.getX(), position.getY(), position.getCharacter().getMoveRange());
+					this.isMoving = true;
+				} else {
+					surroundAction(position.getX(), position.getY(), position.getCharacter().getAttackRange());
+					this.isAttacking = true;
+				}
 			}
 		} else if (!isFromSelf) {
 			System.out.println("Opponent's char clicked.");

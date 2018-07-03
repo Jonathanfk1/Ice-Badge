@@ -507,4 +507,8 @@ public class GUIBoard extends JFrame {
 		this.removeButtons();
 	}
 
+	public void warnOutOfActions() {
+		JOptionPane.showMessageDialog(this, "Already moved and attacked this turn.", "Out of actions", JOptionPane.WARNING_MESSAGE);
+	}
+
 }
