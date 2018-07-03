@@ -47,32 +47,10 @@ public class Game {
 	// 	this.opponent.setMainBase(this.board.getOpponentMainBase());
 	// }
 
-	public Action selectPosition(Position clickedPosition) {
-		if (this.player.getSelectedPosition() == null)
-			this.player.setSelectedPosition(clickedPosition);
-		return new Action(null, null, TypeAction.SELECT_CHARACTER);
-	}
 
 	public Action attack(Position clickedPosition) {
 		System.out.println("attack");
 		return null;
-	}
-
-	public Action move(Position clickedPosition) {
-		Position selectedPosition = this.player.getSelectedPosition();
-		Character character = selectedPosition.getCharacter();
-
-		clickedPosition.setCharacter(character);
-		selectedPosition.removeCharacter();
-
-		return new Action(selectedPosition, clickedPosition, TypeAction.MOVE);
-	}
-
-	public Action changeTurn() {
-		this.player.setTurn(false);
-		this.opponent.setTurn(true);
-
-		return new Action(null, null, TypeAction.CHANGE_TURN);
 	}
 
 	public Character selectCharacter(TypeCharacter type) {

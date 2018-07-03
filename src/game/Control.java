@@ -41,6 +41,7 @@ public class Control {
 	protected boolean playerHasAttacked;
 	protected boolean isMoving;
 	protected boolean isAttacking;
+	protected ArrayList<Action> lastActions;
 
 	public Control() {
 		this.actorNetGames = new ActorNetGames(this);
@@ -61,6 +62,7 @@ public class Control {
 		this.selectedCharacter = null;
 		this.playerHasMoved = false;
 		this.playerHasAttacked = false;
+		this.lastActions = new ArrayList<Action>();
 	}
 
 	public void disconnectFromNetGames() {
@@ -130,34 +132,6 @@ public class Control {
 		}
 	}
 	
-	public Action changeTurn() {
-		if (this.actorPlayer.isTurn()) {
-			return this.game.changeTurn();
-		}
-		return new Action(null, null, TypeAction.CHANGE_TURN);
-	}
-
-	public Action makeAction(int x, int y) {
-		Position clickedPosition = null;
-		Character character;
-
-		if (this.actorPlayer.isTurn()) {
-			clickedPosition = this.game.getPosition(x, y);
-			character = clickedPosition.getCharacter();
-
-			if (clickedPosition.getCharacter() != null) {
-
-				if (this.actorPlayer.checkPlayerCharacter(character)) {
-					return this.game.selectPosition(clickedPosition);
-				}
-
-				return this.game.attack(clickedPosition);
-			}
-
-			return this.game.move(clickedPosition);
-		}
-		return null;
-	}
 
 	public void selectCharacter(TypeCharacter type) {
 		if (this.selectedCharacters.size() < NUMBER_OF_CHARACTERS) {
@@ -168,26 +142,6 @@ public class Control {
 				this.guiSelectCharacter.showReadyButton(true);	
 			}
 		} 
-	}
-
-	public void receiveLaunchedAction(Action launchAction) {
-		switch(launchAction.getType()) {
-			case ATTACK:
-
-			break;
-			case MOVE:
-
-			break;
-			case CHANGE_TURN:
-
-			break;
-			case SELECT_CHARACTER:
-
-			break;
-			default:
-
-			break;
-		}
 	}
 
 	public void setActorPlayer(ActorPlayer actorPlayer) {
@@ -309,8 +263,8 @@ public class Control {
 			Character opponentPositionCharacter = opponentPosition.getCharacter();
 			if (this.playerHasAttacked) {
 				this.guiBoard.warnAlreadyAttacked();
+				this.guiBoard.cleanSelection();
 			} else {
-				this.isAttacking = true;
 				if (selectedCharacter.attack(opponentPositionCharacter) == 0) {
 					this.game.getBoard().removeDeadCharacter(opponentPositionCharacter);
 					System.out.println("Removing character...");
@@ -318,6 +272,9 @@ public class Control {
 				} else {
 					System.out.println("Char is still alive with " + opponentPositionCharacter.getLife() + " of life.");
 				}
+				Action action = new Action(this.selectedCharacter, opponentPositionCharacter);
+				this.actorNetGames.sendAction(action);
+				this.lastActions.add(action);
 				this.playerHasAttacked = true;
 				this.guiBoard.cleanSelection();
 				this.selectedCharacter = null;
@@ -341,8 +298,12 @@ public class Control {
 		}
 		if (game.getOpponent().getMainBase().getX() == position.getX() && game.getOpponent().getMainBase().getY() == position.getY()) {
 			System.out.println("AND Position equals Opponents main base.");
-			if (this.isAttacking || this.isMoving) {
-				this.guiBoard.warnGameIsOver();
+			if (this.playerHasAttacked) {
+				this.guiBoard.warnAlreadyMoved();
+			} else {
+				Message message = new Message(MessageType.GAME_OVER);
+				this.actorNetGames.sendMessage(message);
+				this.guiBoard.warnGameIsOver(true);
 			}
 		}
 
@@ -359,9 +320,13 @@ public class Control {
 				if (!this.playerHasMoved) {
 					this.game.getBoard().move(this.selectedCharacter, this.game.getBoard().getPosition(position.getX(), position.getY()));
 					this.playerHasMoved = true;
+					Position newPosition = new Position(position.getX(), position.getY());
+					Action action = new Action(this.selectedCharacter, newPosition);
+					this.lastActions.add(action);
 				} else {
 					System.out.println("Player already moved");
 					this.guiBoard.warnAlreadyMoved();
+					this.guiBoard.cleanSelection();
 				}
 			}
 			validateAllActionsDone();
@@ -374,11 +339,7 @@ public class Control {
 	}
 
 	public void validateAllActionsDone() {
-		if (playerHasMoved && playerHasAttacked) {
-			this.guiBoard.playDone();
-			this.playerHasAttacked = false;
-			this.playerHasMoved = false;
-		}
+		// this.guiBoard.playDone();
 	}
 
 	public void updateBoardGUI() {
@@ -391,12 +352,36 @@ public class Control {
 	public void launchPlay() {
 		Message play = new Message(MessageType.CHANGED_TURN, this.getGame().getBoard().getPositions());
 		this.actorNetGames.sendMessage(play);
+		this.playerHasAttacked = false;
+		this.playerHasMoved = false;
+		this.lastActions.clear();
 	}
 
 	public void setNewPositions(Position[][] newPositions) {
 		this.game.getBoard().setPositions(newPositions);
 		this.updateBoardGUI();
 	}
+
+	public void pressedReady() {
+		toggleIsReadyToStart();
+		this.guiSelectCharacter.updateReadyText();
+		if (!areBothBoardSidesSet()) {
+			this.game.getPlayer().setBoardSide(askForBoardSide());
+		}
+	}
+
+	public void warnGameIsOver(boolean isWinner) {
+		this.guiBoard.warnGameIsOver(isWinner);
+	}
+
+	public void updatePositions(Character character, Position finalPosition) {
+		
+	}
+
+	public void updateCharacter(Character attackedCharacter) {
+		
+	}
+
 
 	// > GETTERS AND SETTERS
 
@@ -464,14 +449,5 @@ public class Control {
 	public GUIBoard getGuiBoard() {
 		return this.guiBoard;
 	}
-
-	public void pressedReady() {
-		toggleIsReadyToStart();
-		this.guiSelectCharacter.updateReadyText();
-		if (!areBothBoardSidesSet()) {
-			this.game.getPlayer().setBoardSide(askForBoardSide());
-		}
-	}
-
 
 }

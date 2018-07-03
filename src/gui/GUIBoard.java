@@ -459,7 +459,7 @@ public class GUIBoard extends JFrame {
 				}
 			}
 		});
-		this.sendPlay.setVisible(false);
+		this.sendPlay.setVisible(true);
 		this.lowerPanel.add(this.sendPlay, BorderLayout.EAST);
 	}
 	
@@ -498,8 +498,13 @@ public class GUIBoard extends JFrame {
 		JOptionPane.showMessageDialog(this, "Already attacked this turn.", "Attack not available", JOptionPane.WARNING_MESSAGE);
 	}
 
-	public void warnGameIsOver() {
-		JOptionPane.showMessageDialog(this, "You win the game.", "Game won!", JOptionPane.PLAIN_MESSAGE);
+	public void warnGameIsOver(boolean isWinner) {
+		if (isWinner) {
+			JOptionPane.showMessageDialog(this, "You win the game.", "Game won!", JOptionPane.PLAIN_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(this, "Sorry, you lost the game. :(", "Game lost...", JOptionPane.PLAIN_MESSAGE);
+		}
+		this.removeButtons();
 	}
 
 }

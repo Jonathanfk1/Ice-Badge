@@ -93,6 +93,12 @@ public class ActorNetGames implements OuvidorProxy {
 
 			switch (launchAction.getLaunchAction().getType()) {
 				default:
+					if (launchAction.getLaunchAction().getMovedCharacter() != null && launchAction.getLaunchAction().getFinalPosition() != null) {
+						this.control.updatePositions(null, launchAction.getLaunchAction().getFinalPosition());	
+					}
+					if (launchAction.getLaunchAction().getAttackedCharacter() != null) {
+						this.control.updateCharacter(launchAction.getLaunchAction().getAttackedCharacter());
+					}
 				break;
 			}
 
@@ -139,6 +145,9 @@ public class ActorNetGames implements OuvidorProxy {
 					Position[][] newPositions = message.getPositions();
 					this.isMyTurn = !this.isMyTurn;
 					this.control.setNewPositions(newPositions);
+				break;
+				case GAME_OVER:
+					this.control.warnGameIsOver(false);
 				break;
 				default:
 				break;
