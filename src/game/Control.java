@@ -195,16 +195,16 @@ public class Control {
 		Message message = new Message(MessageType.BEGIN_GAME, this.getSelectedCharacters());
 		this.actorNetGames.sendMessage(message);
 	}
-	
-	public void setIsRoomStarted(boolean roomStarted) {
-		this.isRoomStarted = roomStarted;
-		this.guiMainMenu.setRoomStartedText(this.isRoomStarted);
-		this.guiMainMenu.update(this.guiMainMenu.getGraphics());
-	}
 
 	public void setIsConnected(boolean connected) {
 		this.isConnected = connected;
 		this.guiMainMenu.setConnectedText(this.isConnected);
+		this.guiMainMenu.update(this.guiMainMenu.getGraphics());
+	}
+	
+	public void setIsRoomStarted(boolean roomStarted) {
+		this.isRoomStarted = roomStarted;
+		this.guiMainMenu.setRoomStartedText(this.isRoomStarted);
 		this.guiMainMenu.update(this.guiMainMenu.getGraphics());
 	}
 
@@ -226,6 +226,7 @@ public class Control {
 
 	public void openNewBoard() {
 		this.guiBoard = new GUIBoard(this, actorPlayer);
+		this.game.isOngoing(true);
 	}
 	
 	public void gameAboutToStart(List<Character> listOfOpponentCharacters) {
@@ -272,6 +273,12 @@ public class Control {
 				if (selectedCharacter.attack(opponentCharacter) == 0) {
 					this.game.getBoard().removeDeadCharacter(opponentCharacter);
 					System.out.println("Removing character...");
+					if (this.game.getOpponent().getCharactersList().isEmpty()) { // Add OPT to diagram
+						Message message = new Message(MessageType.GAME_OVER);
+						this.actorNetGames.sendMessage(message);
+						this.guiBoard.warnGameIsOver(true);
+						this.game.isOngoing(false);
+					}
 					updateBoardGUI();
 				} else {
 					System.out.println("Char is still alive with " + opponentCharacter.getLife() + " of life.");
@@ -305,9 +312,11 @@ public class Control {
 			if (this.playerHasAttacked) {
 				this.guiBoard.warnAlreadyMoved();
 			} else {
+				updateBoardGUI();
 				Message message = new Message(MessageType.GAME_OVER);
 				this.actorNetGames.sendMessage(message);
 				this.guiBoard.warnGameIsOver(true);
+				this.game.isOngoing(false);
 			}
 		}
 
@@ -322,11 +331,15 @@ public class Control {
 			System.out.println("Character is selected, clicked grass");
 			if (this.isMoving) {
 				if (!this.playerHasMoved) {
-					this.game.getBoard().move(this.selectedCharacter, this.game.getBoard().getPosition(position.getX(), position.getY()));
-					this.playerHasMoved = true;
-					Position newGrassPosition = new Position(position.getX(), position.getY());
-					Action action = new Action(this.selectedCharacter, newGrassPosition);
-					this.lastActions.add(action);
+					if (validateBoundsX(position) && validateBoundsY(position)) {
+						Position newGrassPosition = this.game.getBoard().move(this.selectedCharacter, this.game.getBoard().getPosition(position.getX(), position.getY()));
+						this.playerHasMoved = true;
+						// Position newGrassPosition = new Position(position.getX(), position.getY());
+						Action action = new Action(this.selectedCharacter, newGrassPosition);
+						this.lastActions.add(action);
+					} else {
+						this.guiBoard.warnPositionNotAvailable();
+					}
 				} else {
 					System.out.println("Player already moved");
 					this.guiBoard.warnAlreadyMoved();
@@ -342,6 +355,63 @@ public class Control {
 		}
 	}
 
+	// public testCharBounds() {
+	// 	surroundAction(position.getX(), position.getY(), position.getCharacter().getMoveRange());
+	// }
+
+	public boolean validateBoundsX(Position to) {
+		int matrixInitX = getCharacterMatrixInitX(this.selectedCharacter.getPosition().getX(), this.selectedCharacter.getPosition().getY(), this.selectedCharacter.getMoveRange());
+		int matrixBoundsX = getCharacterMatrixBoundsX(this.selectedCharacter.getPosition().getX(), this.selectedCharacter.getPosition().getY(), this.selectedCharacter.getMoveRange());
+		return (to.getX() >= matrixInitX && to.getX() < matrixBoundsX);
+	}
+
+	public boolean validateBoundsY(Position to) {
+		int matrixInitY = getCharacterMatrixInitY(this.selectedCharacter.getPosition().getX(), this.selectedCharacter.getPosition().getY(), this.selectedCharacter.getMoveRange());
+		int matrixBoundsY = getCharacterMatrixBoundsY(this.selectedCharacter.getPosition().getX(), this.selectedCharacter.getPosition().getY(), this.selectedCharacter.getMoveRange());
+		return (to.getX() >= matrixInitY && to.getX() < matrixBoundsY);
+	}
+
+	public int getCharacterMatrixInitX(int x, int y, int range) {
+		int matrixInitX = x-range;
+		if (matrixInitX < 0) {
+			matrixInitX = 0;
+		} else if (matrixInitX > this.getGame().getBoard().getRowSize()) {
+			matrixInitX = this.getGame().getBoard().getRowSize();
+		}
+		return matrixInitX;
+	}
+
+	public int getCharacterMatrixInitY(int x, int y, int range) {
+		int matrixInitY = y-range;
+		if (matrixInitY < 0) {
+			matrixInitY = 0;
+		} else if (matrixInitY > this.getGame().getBoard().getColumnSize()) {
+			matrixInitY = this.getGame().getBoard().getRowSize();
+		}
+		return matrixInitY;
+	}
+
+	public int getCharacterMatrixBoundsX(int x, int y, int range) {
+		int matrixBoundsX = x+(range)+1;
+		if (matrixBoundsX < 0) {
+			matrixBoundsX = 0;
+		} else if (matrixBoundsX > this.getGame().getBoard().getRowSize()) {
+			matrixBoundsX = this.getGame().getBoard().getRowSize();
+		}
+		return matrixBoundsX;
+	}
+
+	public int getCharacterMatrixBoundsY(int x, int y, int range) {
+		int matrixBoundsY = y+(range)+1;
+
+		if (matrixBoundsY < 0) {
+			matrixBoundsY = 0;
+		} else if (matrixBoundsY > this.getGame().getBoard().getRowSize()) {
+			matrixBoundsY = this.getGame().getBoard().getRowSize();
+		}
+		return matrixBoundsY;
+	}
+
 	public void validateAllActionsDone() {
 		// this.guiBoard.playDone();
 	}
@@ -351,6 +421,9 @@ public class Control {
 		this.guiBoard.removeButtons();
 		this.guiBoard.setBoard();
 		this.guiBoard.revalidateGUI();
+		if (!game.isOngoing() || !game.getPlayer().isTurn()) {
+			this.guiBoard.removeButtons();
+		}
 	}
 
 	public void launchPlay() {
@@ -457,6 +530,7 @@ public class Control {
 
 	public void setPlayerTurn(boolean b) {
 		this.game.getPlayer().setTurn(b);
+		// this.guiBoard.freezeButtons(!b);
 		this.game.getOpponent().setTurn(!b);
 	}
 

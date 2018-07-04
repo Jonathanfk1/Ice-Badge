@@ -138,6 +138,7 @@ public class ActorNetGames implements OuvidorProxy {
 							this.control.gameAboutToStart(message.getListOfCharacters());
 							this.control.createGameWithSetPositions(this.isMyTurn, message.getPositions());
 							this.control.openNewBoard();
+							this.control.setPlayerTurn(true);
 						}
 					}
 				break;

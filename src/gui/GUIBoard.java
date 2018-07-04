@@ -504,7 +504,7 @@ public class GUIBoard extends JFrame {
 
 	public void warnGameIsOver(boolean isWinner) {
 		if (isWinner) {
-			JOptionPane.showMessageDialog(this, "You win the game.", "Game won!", JOptionPane.PLAIN_MESSAGE);
+			JOptionPane.showMessageDialog(this, "You win the game!", "Game won!", JOptionPane.PLAIN_MESSAGE);
 		} else {
 			JOptionPane.showMessageDialog(this, "Sorry, you lost the game. :(", "Game lost...", JOptionPane.PLAIN_MESSAGE);
 		}
@@ -513,6 +513,18 @@ public class GUIBoard extends JFrame {
 
 	public void warnOutOfActions() {
 		JOptionPane.showMessageDialog(this, "Already moved and attacked this turn.", "Out of actions", JOptionPane.WARNING_MESSAGE);
+	}
+
+	public JButton[][] getButtonsMap() {
+		return this.buttonsMap;
+	}
+
+	public void warnPositionNotAvailable() {
+		JOptionPane.showMessageDialog(this, "This position is not reachable.", "Position invalid", JOptionPane.WARNING_MESSAGE);
+	}
+
+	public void freezeButtons(boolean b) {
+		
 	}
 
 }

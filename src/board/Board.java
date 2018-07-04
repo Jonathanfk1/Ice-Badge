@@ -317,12 +317,13 @@ public class Board {
 		}
 	}
 
-	public void move(Character character, Position to) {
+	public Position move(Character character, Position to) {
 		Position oldPosition = character.getPosition();
 		Position newPosition = new Position(to.getX(), to.getY(), character);
 		character.setPosition(newPosition);
 		this.positions[newPosition.getX()][newPosition.getY()] = newPosition;
-		this.positions[oldPosition.getX()][oldPosition.getY()] = new Position(oldPosition.getX(), oldPosition.getY(), TypeTile.GRASS);
+		Position newGrassPosition = new Position(oldPosition.getX(), oldPosition.getY(), TypeTile.GRASS);
+		this.positions[oldPosition.getX()][oldPosition.getY()] = newGrassPosition;
 		
 		// character.getPosition().setCharacter(null);
 		// character.getPosition().setTile(TypeTile.GRASS);
@@ -332,6 +333,7 @@ public class Board {
 		// to.isObstacle(true);
 		// to.isOccupied(true);
 		this.updateBoardGUI();
+		return newGrassPosition;
 	}
 
 	private void updateBoardGUI() {

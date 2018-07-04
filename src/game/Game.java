@@ -2,7 +2,6 @@ package game;
 
 import board.Position;
 
-import java.time.Year;
 import java.util.List;
 
 import board.Board;
@@ -137,6 +136,14 @@ public class Game {
 
 	public void updateBoardGUI() {
 		this.control.updateBoardGUI();
+	}
+
+	public void isOngoing(boolean b) {
+		this.isOngoing = b;
+	}
+
+	public boolean isOngoing() {
+		return this.isOngoing;
 	}
 
 }
